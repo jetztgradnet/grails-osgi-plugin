@@ -1,6 +1,59 @@
-===============================================================
-=Grails OSGi plugin
-===============================================================
+h1. Grails OSGi plugin
 
+h2. About
 
-TODO
+The Grails OSGi plugin provides scripts to package a Grails application as an OSGi bundle. Additionally the bundle(s) may be run in an OSGi container assembled ad hoc by the excellent "Pax Runner":http://paxrunner.ops4j.org or deployed to a "SpringSource DM Server":http://www.springsource.org/dmserver
+
+See also "Grails on OSGi":http://blog.jetztgrad.net/grails-on-osgi/ for details on running Grails applications in an OSGi environment.
+
+h2. License
+
+The OSGi plugin is released under the "Apache License 2.0":http://apache.org/licenses/LICENSE-2.0.txt.
+
+h2. Installation
+
+Simply call @grails install-plugin osgi@ to install the OSGi plugin
+
+h2. Usage
+
+h3. Creating an OSGi bundle from the Grails application
+
+@grails bundle@
+@grails prod bundle@ 
+
+h3. Running the bundle
+
+@grails run-bundle@
+@grails prod run-bundle@
+
+Note: at first start the OSGi runtime is assembled, which may take some time, while Maven is downloading the internet...
+
+h3. Creating a zipped OSGi runtime
+
+@grails assemble-osgi-runtime@
+@grails prod assemble-osgi-runtime@
+
+h3. Deploy bundle to DM Server
+
+@grails dmserver deploy@ (Not yet implemented)
+
+h2. How it works
+
+In order to be a valid OSGi bundle, the application is war'ed and provided with the necessary bundle manifest headers (see @scripts/_Event.groovy@ for details).
+The bundle can be created using @grails bundle@.  
+
+The OSGi runtime is assembled in the @target/osgi@ directory.
+
+h2. Roadmap
+
+* make bundle generation configurable (e.g. include/exclude dependencies, ...)
+* make OSGi runtime created by @grails run-bundle@ and @grails assemble-osgi-runtime@ configurable
+* support auto-reloading of changed artifacts
+* use Spring DM instead of Pax Web as Web extender
+* remove dependencies from bundle and package them as their own plugins (re-using existing bundles from the "SpringSource Enterprise Repository":http://www.springsource.com/repository
+* export main Grails beans and application context as OSGi service
+* export services as OSGi service (via @static expose = 'osgi'@)
+* provide access to OSGi @BundleContext@ to artifacts (controllers, services, ...)
+* implement deployment to DM Server
+* consider other deployment options: Apache Karaf, ...
+
