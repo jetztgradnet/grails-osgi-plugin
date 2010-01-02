@@ -9,6 +9,8 @@ includeTargets << grailsScript("Init")
 includeTargets << grailsScript("_GrailsWar")
 includeTargets << grailsScript("_GrailsPackage")
 
+def paxRunnerGrailsProfile="$osgiPluginDir/grails-app/paxrunner-grails.profile"
+
 
 target(runBundle: '''Package and run the application as OSGi bundle
 	
@@ -25,7 +27,8 @@ target(runBundle: '''Package and run the application as OSGi bundle
 	echo " NOTE: The first startup might take a some time, while the OSGi framework and some dependencies are downloaded! "
 	echo "================================================================================================================"
 	
-	Run.main(["--args=file:$osgiPluginDir/paxrunner-grails.profile", "scan-bundle:file:${warName}@update", "--log=DEBUG" ] as String[]);
+	//println "using profile $paxRunnerGrailsProfile"
+	Run.main(["--args=file:$paxRunnerGrailsProfile", "scan-bundle:file:${warName}@update", "--log=DEBUG" ] as String[]);
 }
 
 target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the application 
@@ -43,7 +46,23 @@ target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the applicatio
 	echo " NOTE: The first startup might take a some time, while the OSGi framework and some dependencies are downloaded! "
 	echo "================================================================================================================"
 	
-	Run.main(["--executor=zip", "--args=file:$osgiPluginDir/paxrunner-grails.profile", "scan-bundle:file:${warName}@update", "--log=INFO" ] as String[]);
+	//println "using profile $paxRunnerGrailsProfile"
+	Run.main(["--executor=zip", "--args=file:$paxRunnerGrailsProfile", "scan-bundle:file:${warName}@update", "--log=INFO" ] as String[]);
+
+	// rename "paxrunner-osgi.zip" -> <appname-osgi.zip>
+	// NOTE: the "-osgi" part in the filename comes from the name of the working directory
+	//       (pax runner option --workingDirectory)
+	def outFile = new File("paxrunner-osgi.zip")
+	def targetFile = new File("${grailsAppName}-${metadata.getApplicationVersion()}-osgi.zip")
+	if (!outFile.renameTo(targetFile)) {
+		targetFile = outFile
+	}
+	if (targetFile.exists()) {
+		echo "The assembled OSGi environment can be found in ${targetFile}"
+	}
+	else {
+		echo "Failed to assemble an OSGi environment! See log output for details"
+	}
 }
 
 target(bundle: '''Package the application as OSGi bundle

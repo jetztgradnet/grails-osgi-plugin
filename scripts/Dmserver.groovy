@@ -1,4 +1,4 @@
-includeTargets << grailsScript("_Osgi")
+includeTargets << new File("$osgiPluginDir/scripts/_Osgi.groovy")
 
 // this script is modeled after the Tomcat plugin 
 
