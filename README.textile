@@ -26,7 +26,7 @@ h3. Running the bundle
 @grails run-bundle@
 @grails prod run-bundle@
 
-Note: at first start the OSGi runtime is assembled, which may take some time, while Maven is downloading the internet...
+Note: at first start the OSGi runtime is assembled, which may take some time, while Maven is downloading the Internet...
 
 h3. Creating a zipped OSGi runtime
 
