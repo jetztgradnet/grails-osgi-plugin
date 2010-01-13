@@ -1,6 +1,6 @@
 class OsgiGrailsPlugin {
     // the plugin version
-    def version = "0.1"
+    def version = "0.2"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.2.0 > *"
     // the other plugins this plugin depends on
@@ -18,8 +18,15 @@ class OsgiGrailsPlugin {
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/osgi"
 
-    def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before 
+    def doWithWebDescriptor = { webXml ->
+		def contextParam = webXml.'context-param'
+		def lastContextParam = contextParam[contextParam.size()-1]
+		lastContextParam + {
+			'context-param' {
+				'param-name'("contextClass")
+				'param-value'("org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext")
+			}
+		}
     }
 
     def doWithSpring = {
