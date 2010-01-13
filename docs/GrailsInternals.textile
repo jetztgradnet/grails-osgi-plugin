@@ -1,0 +1,59 @@
+h1. Grails initialization
+
+h2. Main application context
+
+p. Spring ContextLoaderListener creates main application context. A Grails specific implementation of the ContextLoader (@org.codehaus.groovy.grails.web.context.GrailsContextLoader@) takes care of creating a GrailsWebApplicationContext, which implements @groovy.lang.GroovyObject@ and is initialized with beans created with the @BeanBuilder@ from Grails, plugins, @grails-app/conf/spring/resources.groovy@, and @grails-app/conf/spring/resources.xml@.  
+
+bc.. 
+<web-app>
+...
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/applicationContext.xml</param-value>
+  </context-param>
+
+...
+
+  <listener>
+    <listener-class>org.codehaus.groovy.grails.web.context.GrailsContextLoaderListener</listener-class>
+  </listener>
+
+...
+</web-app>
+
+p. 
+
+*Application initialization*
+
+* @GrailsConfigUtils.configureWebApplicationContext()@
+* @GrailsConfigUtils.executeGrailsBootstraps()@
+* @GrailsRuntimeConfigurator@
+
+*Main artifacts*
+
+* @GrailsApplication@
+* @GrailsApplicationContext@
+* @GrailsPluginManager@
+
+
+h2. Grails Servlet application context
+
+p. GrailsDispatcherServlet (@org.codehaus.groovy.grails.web.servlet.GrailsDispatcherServlet@) creates its application context using @FrameworkServlet#createWebApplicationContext()@ and decorates it with a @GrailsApplicationContext@. 
+
+bc.. 
+<web-app>
+...
+
+  <servlet>
+    <servlet-name>grails</servlet-name>
+    <servlet-class>org.codehaus.groovy.grails.web.servlet.GrailsDispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+...
+</web-app>
+
+
+p. 
+ 
