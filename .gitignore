@@ -1,3 +1,6 @@
 target
-docs
+docs/api
+docs/gapi
+web-app/WEB-INF/classes/
+.DS_Store
 
