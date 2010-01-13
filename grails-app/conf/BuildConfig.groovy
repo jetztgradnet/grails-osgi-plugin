@@ -26,7 +26,10 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-		build 'org.ops4j.pax.runner:pax-runner:1.3.0'
+		build 'org.slf4j:jcl104-over-slf4j:1.5.10'
+		//build 'org.ops4j.pax.runner:pax-runner:1.3.0'
+		provided 'org.ops4j.pax.runner:pax-runner:1.3.0'
+		compile 'org.osgi:org.osgi.core:4.2.0'
+		compile 'org.osgi:org.osgi.compendium:4.2.0'
     }
-
 }
