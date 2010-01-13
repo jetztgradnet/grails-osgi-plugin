@@ -18,6 +18,7 @@ eventCreateWarStart = { warName, stagingDir ->
 		def classPath = classPathEntries.join(',')
 		attribute(name:"Bundle-ClassPath",value:"${classPath}")
 		def importedPackageList = [
+		    // web upport
 			"javax.servlet",
 			"javax.servlet.http",
 			"javax.servlet.resources",
@@ -30,11 +31,19 @@ eventCreateWarStart = { warName, stagingDir ->
 			"javax.servlet.jsp.jstl.tlv;resolution:=optional",
 			"javax.servlet.jsp.tagext;resolution:=optional",
 			"javax.servlet.jsp.resources;resolution:=optional",
+			// XML parsing
 			"javax.xml.parsers",
 			"org.w3c.dom",
 			"org.xml.sax",
 			"org.xml.sax.ext",
 			"org.xml.sax.helpers",
+			// OSGi related
+			"org.osgi.framework;resolution:=optional",
+			// Spring OSGi related
+			"org.springframework.context;resolution:=optional",
+			"org.springframework.web.context;resolution:=optional",
+			"org.springframework.osgi.context;resolution:=optional",
+			"org.springframework.osgi.web.context.support;resolution:=optional",
 		];
 		def importedPackages = importedPackageList.join(',')
 		attribute(name:"Import-Package", value:"${importedPackages}")
