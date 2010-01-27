@@ -6,7 +6,8 @@ target(main: '''Package and run the application as OSGi bundle
 	grails run-bundle
 	grails prod run-bundle
 	''') {
-	runBundle()
+	//runBundlePaxRunner()
+	runBundleEquinox()
 }
 
 setDefaultTarget(main)
