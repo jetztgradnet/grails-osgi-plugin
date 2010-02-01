@@ -13,8 +13,8 @@ def libToBundleImport = [
     'aopalliance-1.0.jar': 'package:org.aopalliance.aop;version="1.0.0",org.aopalliance.intercept;version="1.0.0"', //bundle:com.springsource.org.aopalliance;version="[3.0.0.RELEASE, 4.0.0)"
 	//'aspectjrt-1.6.6.jar': '',
     //'aspectjweaver-1.6.6.jar': '',
-    //'catalina-ant.jar': '',
-    'cglib-nodep-2.1_3.jar': 'bundle:com.springsource.net.sf.cglib;version="[2.1.3,2.2.0)',
+    'catalina-ant.jar': '',
+    'cglib-nodep-2.1_3.jar': 'bundle:com.springsource.net.sf.cglib;version="[2.1.3,2.2.0)"',
     'commons-beanutils-1.8.0.jar': 'bundle:com.springsource.org.apache.commons.beanutils;version="1.8.0"',
     'commons-codec-1.3.jar': 'bundle:com.springsource.org.apache.commons.codec;version="1.3.0"',
     'commons-collections-3.2.1.jar': 'bundle:com.springsource.org.apache.commons.collections;version="3.2.1"',
@@ -28,7 +28,7 @@ def libToBundleImport = [
     'commons-validator-1.3.1.jar': 'bundle:com.springsource.org.apache.commons.validator;version="1.3.1"',
     'dom4j-1.6.1.jar': 'bundle:com.springsource.org.dom4j;version="1.6.1"',
     //'ehcache-core-1.7.1.jar': '',
-    'ejb3-persistence-1.0.2.GA.jar': 'bundle:com.springsource.javax.persistence;version="[1.0.0,2.0.0)',
+    'ejb3-persistence-1.0.2.GA.jar': 'bundle:com.springsource.javax.persistence;version="[1.0.0,2.0.0)"',
     //'facebook-java-api-2.0.4.jar': '',
     //'facebook-java-api-schema-2.0.4.jar': '',
     'grails-bootstrap-1.2.0.jar': '',
@@ -47,14 +47,14 @@ def libToBundleImport = [
     //'hsqldb-1.8.0.10.jar': '',
     //'htmlparser-1.6.jar': '',
     //'icu4j-3.4.4.jar': '',
-    //'jasper-jdt.jar': '',
+    'jasper-jdt.jar': '',
     //'java-openid-sxip-0.9.4-rebuilt.jar': '',
-    'javassist-3.8.0.GA.jar': 'bundle:com.springsource.javassist;version="[3.9.0, 4.0.0)',
-    //'jaxb-api-2.1.jar': '',
-    //'jaxb-impl-2.1.3.jar': '',
+    'javassist-3.8.0.GA.jar': 'bundle:com.springsource.javassist;version="[3.9.0, 4.0.0)"',
+    'jaxb-api-2.1.jar': '',
+    'jaxb-impl-2.1.3.jar': '',
     'jcl-over-slf4j-1.5.8.jar': 'package:org.apache.commons.logging;version="[1.1.1, 1.2.0)"',
     //'json-20070829.jar': '',
-    //'jta-1.1.jar': '',
+    'jta-1.1.jar': '',
     //'jug-1.1.2.jar': '',
     'jul-to-slf4j-1.5.8.jar': '',
     'log4j-1.2.15.jar': '',
@@ -87,11 +87,16 @@ def libToBundleImport = [
     'slf4j-api-1.5.8.jar': 'package:org.slf4j;version="[1.5.6, 1.6.0)"',
     'slf4j-log4j12-1.5.8.jar': '',
     //'standard-1.1.2.jar': '',
-    //'stax-api-1.0-2.jar': '',
-    //'xalan-2.7.1.jar': '',
-    //'xercesImpl-2.9.1.jar': '',
-    //'xmlsec-1.4.2.jar': '',
-    //'xpp3_min-1.1.3.4.O.jar': '',
+    'stax-api-1.0-2.jar': '',
+	'tomcat-core.jar': '',
+	'tomcat-dbcp.jar': '',
+	'tomcat-jasper.jar': '',
+	'tomcat-juli-adapters.jar': '',
+	'tomcat-juli.jar': '',
+    'xalan-2.7.1.jar': '',
+    'xercesImpl-2.9.1.jar': '',
+    'xmlsec-1.4.2.jar': '',
+    'xpp3_min-1.1.3.4.O.jar': '',
 ]
 
 eventCreateWarStart = { warName, stagingDir -> 
@@ -201,8 +206,10 @@ eventCreateWarStart = { warName, stagingDir ->
 		
 		def importedPackages = importedPackageList.join(',')
 		attribute(name:"Import-Package", value:"${importedPackages}")
+
 		def importedBundles = importedBundleList.join(',')
 		attribute(name:"Import-Bundle", value:"${importedBundles}")
+
 		attribute(name:"Webapp-Context",value:"${grailsAppName}")
 	} 
 }
