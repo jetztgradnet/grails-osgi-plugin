@@ -355,8 +355,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	
 	def osgiRuntimeDir = new File(new File(warName).parentFile, 'osgi').canonicalPath
 
-	EquinoxRunner runner = new EquinoxRunner()
-	runner.osgiRuntimeDir = osgiRuntimeDir
+	EquinoxRunner runner = new EquinoxRunner(argsMap: argsMap, osgiRuntimeDir: osgiRuntimeDir)
 	BundleContext ctx = runner.start()
 
 	// install and start infrastructure bundles
@@ -440,6 +439,7 @@ target(bundle: '''Package the application as OSGi bundle
 
 
 class EquinoxRunner {
+	Map argsMap
 	String osgiRuntimeDir
 	BundleContext bundleContext
 	
@@ -474,7 +474,16 @@ class EquinoxRunner {
 		EclipseStarter.setInitialProperties(frameworkProperties);
 		
 		// start framework
-		def args = [ "-clean", "-console", "-consoleLog" ] 
+		def args = [ "-clean", "-consoleLog", "-console" ]
+		
+		// TODO make configurable
+		def consolePort = 0
+		if (argsMap?.consolePort) {
+			consolePort = argsMap.consolePort
+		}
+		if (consolePort) {
+			args << consolePort.toString()
+		}
 		this.bundleContext = EclipseStarter.startup( args as String[], null );
 		
 		configureLogging()
