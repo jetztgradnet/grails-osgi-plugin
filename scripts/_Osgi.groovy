@@ -12,7 +12,6 @@ import org.osgi.util.tracker.ServiceTracker
 import grails.util.BuildScope
 import grails.util.BuildSettings
 
-//import org.ops4j.pax.runner.Run;
 import org.ops4j.pax.swissbox.tinybundles.core.TinyBundles
 
 import org.apache.log4j.ConsoleAppender;
@@ -31,11 +30,6 @@ includeTargets << grailsScript("_GrailsWar")
 
 def osgiSettingsDir="$osgiPluginDir/grails-app/osgi"
 
-// TODO support more than one profile
-//def paxRunnerGrailsProfile="$osgiPluginDir/grails-app/paxrunner-grails.profile"
-def paxRunnerGrailsProfile = new File("$osgiSettingsDir/grails.profile").canonicalPath
-def paxRunnerSettings = new File("$osgiSettingsDir/settings.conf").canonicalPath
-
 // used bundles
 allBundles = []
 
@@ -43,7 +37,6 @@ systemBundles = [
 	//'org.eclipse/osgi/3.5.0.v20090520',
 	'org.eclipse.osgi:util:3.2.0.v20090520-1800',
 	'org.eclipse.osgi:services:3.2.0.v20090520-1800',
-	//'org.ops4j.pax.confman:pax-confman-propsloader:0.2.2',
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
 ]
@@ -262,64 +255,12 @@ def osgiDependencies = {
 		//mavenRepo "http://repository.jboss.com/maven2/"
 	}
 	dependencies {
-		/*
-		build ("org.springframework.osgi:spring-osgi-core:$springDMVersion".toString(),
-				"org.springframework.osgi:spring-osgi-extender:$springDMVersion".toString(),
-				"org.springframework.osgi:spring-osgi-io:$springDMVersion".toString(),
-				"org.springframework.osgi:spring-osgi-web:$springDMVersion".toString(),
-				"org.springframework.osgi:spring-osgi-web-extender:$springDMVersion".toString()) {
-			transitive = false
-		}
-		build ('org.ops4j.pax.logging:pax-logging-api:1.4',
-				'org.ops4j.pax.logging:pax-logging-service:1.4') {
-			transitive = false
-		}
-		*/
 		allBundles.each{ dep -> 
 			build (dep) {
 				transitive = false
 			}
 		}
 	}
-}
-
-target(runBundlePaxRunner: '''Package and run the application as OSGi bundle
-	
-	Examples: 
-	grails run-bundle
-	grails prod run-bundle
-	''') {
-	
-	// bundle application
-	bundle()
-	
-	echo "================================================================================================================"
-	echo " Starting OSGi framework"
-	echo " NOTE: The first startup might take a some time, while the OSGi framework and some dependencies are downloaded! "
-	echo "================================================================================================================"
-	
-	// TODO set server ports from serverPort and serverPortHttps:
-	// -Dorg.osgi.service.http.port=$serverPort
-	// -Dorg.osgi.service.http.port.secure=$serverPortHttps
-	// -Dorg.osgi.service.http.secure.enabled=true
-	
-	// configure logging
-	// JUL:
-	//java.util.logging.Logger.getLogger(Run.class.getName())?.setLevel(java.util.logging.Level.FINEST)
-	// log4j:
-	Logger rootLogger = Logger.getRootLogger();
-	if (!rootLogger.getAllAppenders().hasMoreElements()) {
-		rootLogger.setLevel(Level.INFO);
-		rootLogger.addAppender(new ConsoleAppender(
-				new PatternLayout("%-5p [%t]: %m%n")));
-	}
-		
-	Logger pkgLogger = rootLogger.getLoggerRepository().getLogger("org.ops4j");
-	pkgLogger.setLevel(Level.INFO);
-	
-	println "using settings $paxRunnerSettings"
-	println "using profile $paxRunnerGrailsProfile"
-	org.ops4j.pax.runner.Run.main(["--log=debug", "--args=file:$paxRunnerSettings", "scan-composite:file:$paxRunnerGrailsProfile", "scan-bundle:file:${warName}@update" ] as String[]);
 }
 
 target(runBundleEquinox: '''Package and run the application as OSGi bundle
@@ -407,7 +348,6 @@ Try passing a valid Maven repository with the --repository argument."""
 		runner.start([
 		    'org.eclipse.osgi.util',
 		    'org.eclipse.osgi.services',
-			//'org.ops4j.pax.configmanager',
 		    'org.apache.felix.configadmin',
 		    'org.apache.felix.fileinstall',
 		])
@@ -451,13 +391,11 @@ target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the applicatio
 	echo " NOTE: The first startup might take some time, while the OSGi framework and some dependencies are downloaded! "
 	echo "================================================================================================================"
 	
-	//println "using profile $paxRunnerGrailsProfile"
-	org.ops4j.pax.runner.Run.main(["--executor=zip", "--args=file:$paxRunnerSettings", "scan-composite:file:$paxRunnerGrailsProfile", "scan-bundle:file:${warName}@update", "--log=INFO" ] as String[]);
-
 	// rename "paxrunner-osgi.zip" -> <appname-osgi.zip>
-	// NOTE: the "-osgi" part in the filename comes from the name of the working directory
-	//       (pax runner option --workingDirectory)
-	def outFile = new File("paxrunner-osgi.zip")
+	// TODO create runtime environmet
+	echo "not currently implemented"
+	
+	def outFile = new File("osgi.zip")
 	def targetFile = new File("${grailsAppName}-${metadata.getApplicationVersion()}-osgi.zip")
 	if (!outFile.renameTo(targetFile)) {
 		targetFile = outFile
@@ -693,6 +631,7 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
         catch (IOException e) {
         	println "Failed to update configuration properties:" + e.message
         }
+        tracker.close()
 		println "Log configuration updated!"
 	}
 	
