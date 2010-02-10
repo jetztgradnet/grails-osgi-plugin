@@ -219,8 +219,19 @@ allBundles << appBundles
 
 allBundles = allBundles.flatten().collect { it.toString() }
 
+systemPackages = [
+	'com.sun.org.apache.xalan.internal',
+	'com.sun.org.apache.xalan.internal.res',
+	'com.sun.org.apache.xml.internal.utils',
+	'com.sun.org.apache.xpath.internal',
+	'com.sun.org.apache.xpath.internal.jaxp',
+	'com.sun.org.apache.xpath.internal.objects',
+	'com.sun.org.apache.xml.internal',
+	'sun.misc'
+]
+
 def osgiDependencies = {
-	log "info" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+	log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
 	repositories {        
 		grailsPlugins()
 		grailsHome()
