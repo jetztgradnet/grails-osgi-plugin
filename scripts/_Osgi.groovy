@@ -7,8 +7,10 @@ import org.eclipse.core.runtime.adaptor.EclipseStarter
 
 import org.osgi.framework.BundleContext
 import org.osgi.framework.Bundle
+import org.osgi.util.tracker.ServiceTracker
 
 import grails.util.BuildScope
+import grails.util.BuildSettings
 
 //import org.ops4j.pax.runner.Run;
 import org.ops4j.pax.swissbox.tinybundles.core.TinyBundles
@@ -41,6 +43,9 @@ systemBundles = [
 	//'org.eclipse/osgi/3.5.0.v20090520',
 	'org.eclipse.osgi:util:3.2.0.v20090520-1800',
 	'org.eclipse.osgi:services:3.2.0.v20090520-1800',
+	//'org.ops4j.pax.confman:pax-confman-propsloader:0.2.2',
+	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
+	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
 ]
 allBundles << systemBundles
 
@@ -375,16 +380,53 @@ Try passing a valid Maven repository with the --repository argument."""
 	}
 	
 	def osgiRuntimeDir = new File(new File(warName).parentFile, 'osgi').canonicalPath
-
-	EquinoxRunner runner = new EquinoxRunner(argsMap: argsMap, osgiRuntimeDir: osgiRuntimeDir)
-	BundleContext ctx = runner.start()
-
-	// install and start infrastructure bundles
-	runner.install(bundleFiles, true)
-
-	// install and start grails app bundle
-	runner.install(new File(warName), true)
+	if (argsMap?.clean) {
+		try {
+			File dir = new File(osgiRuntimeDir)
+			if (dir.exists()) {
+				println "cleaning up osgi runtime directory..."
+				dir.deleteDir()
+			}
+		}
+		catch (Throwable t) {
+			println "failed to cleanup osgi runtime directory: " + t.message
+		}
+	}
 	
+	try {
+		EquinoxRunner runner = new EquinoxRunner(argsMap: argsMap,
+												buildSettings: grailsSettings,
+												osgiRuntimeDir: osgiRuntimeDir, 
+												systemPackages: systemPackages)
+		BundleContext ctx = runner.start()
+	
+		// install and start infrastructure bundles
+		def bundles = runner.install(bundleFiles, false)
+	
+		// start bundles required for logging
+		runner.start([
+		    'org.eclipse.osgi.util',
+		    'org.eclipse.osgi.services',
+			//'org.ops4j.pax.configmanager',
+		    'org.apache.felix.configadmin',
+		    'org.apache.felix.fileinstall',
+		])
+	
+		// configure logging
+		runner.configureLogging()
+	
+		// start other bundles
+		runner.start(bundles)
+	
+		// install and start grails app bundle
+		println "installing and starting grails app bundle: $warName"
+		runner.install(new File(warName), true)
+	}
+	catch (Throwable t) {
+		println "***ERROR***: " + t.message
+		t.printStackTrace()
+	}
+
 	// wait for user to press CTRL-C
 	def locker = new Object()
 	synchronized(locker) {
@@ -461,8 +503,10 @@ target(bundle: '''Package the application as OSGi bundle
 
 class EquinoxRunner {
 	Map argsMap
+	BuildSettings buildSettings
 	String osgiRuntimeDir
 	BundleContext bundleContext
+	List systemPackages
 	
 	/**
 	 * Start OSGi framework.
@@ -480,34 +524,77 @@ class EquinoxRunner {
 			dir.mkdirs()
 		}
 		
+		def confDir = new File(dir, 'dropins')
+		if (!confDir.exists()) {
+			confDir.mkdirs()
+		}
+		
 		println "OSGi directory: ${osgiRuntimeDir}"
+		
+		
 		
 		// initialize framework
 		def frameworkProperties = new Properties()
-		frameworkProperties.put("osgi.clean", "true");
-		frameworkProperties.put("osgi.console", "true");
-		frameworkProperties.put("osgi.noShutdown", "true");
-		frameworkProperties.put("osgi.install.area", osgiRuntimeDir as String);
-		frameworkProperties.put("osgi.configuration.area", "$osgiRuntimeDir/configuration" as String);
-		frameworkProperties.put("eclipse.ignoreApp", "true");
-		frameworkProperties.put("eclipse.application.noDefault", "true");
-		//frameworkProperties.put("log4j.configuration", logConfig.absolutePath);
-		EclipseStarter.setInitialProperties(frameworkProperties);
+		frameworkProperties.put("osgi.clean", "true")
+		frameworkProperties.put("osgi.console", "true")
+		frameworkProperties.put("osgi.noShutdown", "true")
+		frameworkProperties.put("osgi.install.area", osgiRuntimeDir as String)
+		frameworkProperties.put("osgi.configuration.area", "$osgiRuntimeDir/configuration" as String)
+		frameworkProperties.put("org.osgi.framework.bootdelegation", "*")
+		frameworkProperties.put("eclipse.ignoreApp", "true")
+		frameworkProperties.put("eclipse.application.noDefault", "true")
+		frameworkProperties.put("org.osgi.framework.system.packages.extra", systemPackages.join(','))
+
+		frameworkProperties.put("osgi.frameworkParentClassloader", "ext")
+		frameworkProperties.put("osgi.contextClassLoaderParent", "ext")
+
+		//frameworkProperties.put("log4j.configuration", logConfig.absolutePath)
+		EclipseStarter.setInitialProperties(frameworkProperties)
+
+		//System.setProperty("bundles.configuration.location", confDir.canonicalPath)
 		
 		// start framework
 		def args = [ "-clean", "-consoleLog", "-console" ]
 		
-		// TODO make configurable
+		if (argsMap?.containsKey("debug")) {
+			args << "-debug"
+			String path = argsMap?.debug?.toString()
+			if (path) {
+				args << path
+			}
+		}
+		
+		// configure (remote) console 
+		def consoleEnabled = buildSettings?.config?.osgi.console.enabled ?: false
+		def defaultConsolePort = buildSettings?.config?.osgi.console.port ?: 8023
 		def consolePort = 0
 		if (argsMap?.consolePort) {
-			consolePort = argsMap.consolePort
+			if (argsMap.consolePort instanceof Boolean) {
+				consolePort = defaultConsolePort
+			}
+			else {
+				consolePort = argsMap.consolePort
+			}
+			consoleEnabled = true
 		}
-		if (consolePort) {
+		else if ((argsMap?.consoleLog
+					|| argsMap?.console)
+				&& !consolePort) {
+			consolePort = defaultConsolePort
+			consoleEnabled = true
+		}
+		
+		if (consoleEnabled) {
+			if (!consolePort) {
+				consolePort = defaultConsolePort
+			}
 			args << consolePort.toString()
+			println "running Equinox console on port $consolePort"
 		}
+		
 		this.bundleContext = EclipseStarter.startup( args as String[], null );
 		
-		configureLogging()
+		//configureLogging()
 		
 		return this.bundleContext
 	}
@@ -528,7 +615,7 @@ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.out
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
-log4j.rootLogger=debug, stdout
+log4j.rootLogger=INFO, stdout
 
 log4j.logger.org.springframework.osgi.extender.internal.blueprint=WARN
 log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
@@ -536,9 +623,10 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 			}
 		}
 		
+		/*
 		File logConfigBundle = new File(logConfig.parent, 'Log4JConfigurationFragment-1.0.0.jar')
 		if (!logConfigBundle.exists()
-		|| (logConfigBundle.lastModified() < logConfig.lastModified())) {
+			|| (logConfigBundle.lastModified() < logConfig.lastModified())) {
 			println "creating log configuration bundle in file ${logConfigBundle}"
 			// create log4j fragment bundle containing logging configuration
 			// see http://lists.ops4j.org/pipermail/general/2009q4/003297.html
@@ -559,14 +647,53 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 				}
 			}
 		}
-		
-		// TODO set log configuration as Dictionary using ConfigAdmin to pid 'org.ops4j.pax.logging'
-		// see http://wiki.ops4j.org/display/paxlogging/Configuration
-		
 		if (logConfigBundle.exists()) {
 			// install log configuration fragment
-			this.bundleContext.installBundle("file:${logConfigBundle.canonicalPath}")
+			//this.bundleContext.installBundle("file:${logConfigBundle.canonicalPath}")
 		}
+		*/
+		
+		// set log configuration as Dictionary using ConfigAdmin to pid 'org.ops4j.pax.logging'
+		// see http://wiki.ops4j.org/display/paxlogging/Configuration
+		
+		Properties log4jProperties = new Properties();
+        try {
+        	log4jProperties.load(new FileInputStream(logConfig));
+			println "Loaded log4j.properties"
+			println log4jProperties
+        }
+        catch (IOException e) {
+        	println "Failed to load log4j.properties: " + e.message
+        }
+
+        // Use a Servicetracker to wait for ConfigurationAdmin service
+        ServiceTracker tracker = new ServiceTracker(this.bundleContext, 'org.osgi.service.cm.ConfigurationAdmin', null);
+        tracker.open();
+        def service = null;
+        try {
+            service = tracker.waitForService(0);
+        }
+        catch (InterruptedException e) {
+        	println "Failed to get ConfigurationAdmin service:" + e.message
+        }
+
+        // Update the Pax-Logging configuration by setting the
+        // log4j.properties contents via the ConfigurationAdmin service
+        def configuration = null;
+        try {
+            configuration = service.getConfiguration("org.ops4j.pax.logging", null);
+        }
+        catch (IOException e) {
+            println "Failed to get configuration: " + e.message
+        }
+
+        try {
+            configuration.update(log4jProperties);
+        }
+        catch (IOException e) {
+        	println "Failed to update configuration properties:" + e.message
+        }
+		println "Log configuration updated!"
 	}
 	
 	/**
@@ -577,11 +704,12 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 		this.bundleContext = null
 	}
 	
-	void install(File bundleFile, def autoStart = true) {
-		install([bundleFile], autoStart)
+	Bundle install(File bundleFile, def autoStart = true) {
+		List bundles = install([bundleFile], autoStart)
+		return bundles[0]
 	}
 	
-	void install(List<File> bundleFiles, def autoStart = true) {
+	List<Bundle> install(List<File> bundleFiles, def autoStart = true) {
 		def bundles = []
 		// install each file
 		bundleFiles.each { file ->
@@ -597,17 +725,35 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 		
 		if (autoStart) {
 			// start each bundle
-			bundles.each { bundle ->
-				try {
-					// skip start for fragments
-					if (!isFragment(bundle)) {
-						bundle.start();
-					}
+			start(bundles)
+		}
+		
+		return bundles
+	}
+	
+	void start(List bundles) {
+		// start each bundle
+		bundles.each { bundle ->
+			try {
+				if (bundle instanceof Number) {
+					// get bundle by id
+					bundle = this.bundleContext.getBundle(bundle.longValue())
 				}
-				catch (e) {
-					println "failed to start bundle ${bundle.symbolicName}: ${e.message}"
-				}	
+				else if (bundle instanceof CharSequence) {
+					def bundleName = bundle.toString()
+					bundle = this.bundleContext.bundles.find { it.symbolicName == bundleName }
+				}
+				if (!bundle) {
+					return
+				}
+				// skip start for fragments
+				if (!isFragment(bundle)) {
+					bundle.start();
+				}
 			}
+			catch (e) {
+				println "failed to start bundle ${bundle}: ${e.message}"
+			}	
 		}
 	}
 	
