@@ -1,14 +1,15 @@
 // TODO move all of this into _Osgi.groovy
 
-def osgiImportSpecs = "version=\"[4.1.0, 5.0.0)\""
+def osgiImportSpecs = "version=\"[1.5.0, 5.0.0)\""
 def servletImportSpecs = "version=\"[2.4.0, 2.6.0)\""
-def jspImportSpecs = "$servletImportSpecs;resolution:=optional"
+def jspImportSpecs = "version=\"[2.1.0, 2.3.0)\";resolution:=optional"
+def jstlImportSpecs = "version=\"[1.1.0, 2.0.0)\";resolution:=optional"
 def springImportSpecs = "version=\"[3.0.0, 4.0.0)\""
 def springDMImportSpecs = "version=\"[2.0.0, 3.0.0)\";resolution:=optional"
 
 def libToBundleImport = [
-    'activation-1.1.jar': 'package:javax.activation;version="1.1.1"',
-    'activation.jar': '',
+    'activation-1.1.jar':  'package:javax.activation',// 'package:javax.activation;version="1.1.1"',
+    'activation.jar': 'package:javax.activation',
     'antlr-2.7.6.jar': 'bundle:com.springsource.antlr;version="[2.7.7,2.7.7]"',
     'aopalliance-1.0.jar': 'package:org.aopalliance.aop;version="1.0.0",org.aopalliance.intercept;version="1.0.0"', //bundle:com.springsource.org.aopalliance;version="[3.0.0.RELEASE, 4.0.0)"
 	//'aspectjrt-1.6.6.jar': '',
@@ -31,25 +32,38 @@ def libToBundleImport = [
     'ejb3-persistence-1.0.2.GA.jar': 'bundle:com.springsource.javax.persistence;version="[1.0.0,2.0.0)"',
     //'facebook-java-api-2.0.4.jar': '',
     //'facebook-java-api-schema-2.0.4.jar': '',
-    'grails-bootstrap-1.2.0.jar': '',
-    'grails-core-1.2.0.jar': 'bundle:org.grails.osgi;version="[1.2.0,2.0.0)"', // bundle contains core and bootstrap
-    'grails-crud-1.2.0.jar': 'bundle:org.grails.crud;version="[1.2.0,2.0.0)"',
-    'grails-docs-1.2.0.jar': 'bundle:org.grails.docs;version="[1.2.0,2.0.0)"',
-    'grails-gorm-1.2.0.jar': 'bundle:org.grails.gorm;version="[1.2.0,2.0.0)"',
-    'grails-resources-1.2.0.jar': 'bundle:org.grails.resources;version="[1.2.0,2.0.0)"',
-    'grails-spring-1.2.0.jar': 'bundle:org.grails.spring;version="[1.2.0,2.0.0)"',
-    'grails-web-1.2.0.jar': 'bundle:org.grails.web;version="[1.2.0,2.0.0)"',
+//	'grails-bootstrap-1.2.0.jar': '',
+//	'grails-core-1.2.0.jar': 'bundle:org.grails.osgi;version="[1.2.0,2.0.0)"', // bundle contains core and bootstrap
+//	'grails-crud-1.2.0.jar': 'bundle:org.grails.crud;version="[1.2.0,2.0.0)"',
+////	'grails-docs-1.2.0.jar': 'bundle:org.grails.docs;version="[1.2.0,2.0.0)"',
+//	'grails-gorm-1.2.0.jar': 'bundle:org.grails.gorm;version="[1.2.0,2.0.0)"',
+//	'grails-resources-1.2.0.jar': 'bundle:org.grails.resources;version="[1.2.0,2.0.0)"',
+//	'grails-spring-1.2.0.jar': 'bundle:org.grails.spring;version="[1.2.0,2.0.0)"',
+//	'grails-web-1.2.0.jar': 'bundle:org.grails.web;version="[1.2.0,2.0.0)"',
+	
+//	'grails-bootstrap-1.2.1.jar': '',
+//	'grails-core-1.2.1.jar': 'bundle:org.grails.osgi;version="[1.2.0,2.0.0)"', // bundle contains core and bootstrap
+//	'grails-crud-1.2.1.jar': 'bundle:org.grails.crud;version="[1.2.0,2.0.0)"',
+////	'grails-docs-1.2.1.jar': 'bundle:org.grails.docs;version="[1.2.0,2.0.0)"',
+//	'grails-gorm-1.2.1.jar': 'bundle:org.grails.gorm;version="[1.2.0,2.0.0)"',
+//	'grails-resources-1.2.1.jar': 'bundle:org.grails.resources;version="[1.2.0,2.0.0)"',
+//	'grails-spring-1.2.1.jar': 'bundle:org.grails.spring;version="[1.2.0,2.0.0)"',
+//	'grails-web-1.2.1.jar': 'bundle:org.grails.web;version="[1.2.0,2.0.0)"',
+	
     'groovy-all-1.6.7.jar': 'bundle:groovy-all;version="1.6.7"',
-    'hibernate-annotations-3.4.0.GA.jar': 'bundle:com.springsource.org.hibernate.annotations;version="[3.4.0,3.5.0)"',
+	
+    'hibernate-annotations-3.4.0.GA.jar': '', // this is a fragment to the core hibernate module... 'bundle:com.springsource.org.hibernate.annotations;version="[3.4.0,3.5.0)"',
     'hibernate-commons-annotations-3.3.0.ga.jar': 'bundle:com.springsource.org.hibernate.annotations.common;version="[3.3.0,3.4.0)"',
-    'hibernate-core-3.3.1.GA.jar': 'bundle:com.springsource.org.hibernate.;version="[3.3.1,3.4.0)"',
-    //'hibernate-ehcache-3.3.1.GA.jar': 'bundle:com.springsource.org.hibernate.;version="[3.4.0,3.5.0)"',
+	'hibernate-commons-annotations-3.1.0.GA.jar': 'bundle:com.springsource.org.hibernate.annotations.common;version="[3.3.0,3.4.0)"',
+    'hibernate-core-3.3.1.GA.jar': 'bundle:com.springsource.org.hibernate;version="[3.3.1,3.4.0)"',
+    'hibernate-ehcache-3.3.1.GA.jar': '', // this is a grament to the core hibernate module... 'bundle:com.springsource.org.hibernate.cache;version="[3.3.0,3.5.0)",com.springsource.net.sf.ehcache;version="[1.6.2,1.8.0)"',
     //'hsqldb-1.8.0.10.jar': '',
     //'htmlparser-1.6.jar': '',
     //'icu4j-3.4.4.jar': '',
     'jasper-jdt.jar': '',
     //'java-openid-sxip-0.9.4-rebuilt.jar': '',
     'javassist-3.8.0.GA.jar': 'bundle:com.springsource.javassist;version="[3.9.0, 4.0.0)"',
+	'javassist-3.11.0.GA.jar': 'bundle:com.springsource.javassist;version="[3.9.0, 4.0.0)"',
     'jaxb-api-2.1.jar': '',
     'jaxb-impl-2.1.3.jar': '',
     'jcl-over-slf4j-1.5.8.jar': 'package:org.apache.commons.logging;version="[1.1.1, 1.2.0)"',
@@ -86,7 +100,7 @@ def libToBundleImport = [
     'sitemesh-2.4.jar': 'bundle:com.springsource.com.opensymphony.sitemesh;version="[2.4.0, 2.5.0)"',
     'slf4j-api-1.5.8.jar': 'package:org.slf4j;version="[1.5.6, 1.6.0)"',
     'slf4j-log4j12-1.5.8.jar': '',
-    //'standard-1.1.2.jar': '',
+    'standard-1.1.2.jar': 'bundle:com.springsource.javax.servlet.jsp.jstl;version="[1.1.0, 2.0.0)"',
     'stax-api-1.0-2.jar': '',
 	'tomcat-core.jar': '',
 	'tomcat-dbcp.jar': '',
@@ -125,11 +139,10 @@ eventCreateWarStart = { warName, stagingDir ->
 				"javax.servlet.resources;$servletImportSpecs",
 				"javax.servlet.jsp;$jspImportSpecs",
 				"javax.servlet.jsp.el;$jspImportSpecs",
-				"javax.servlet.jsp.jstl;$jspImportSpecs",
-				"javax.servlet.jsp.jstl.core;$jspImportSpecs",
-				"javax.servlet.jsp.jstl.fmt;$jspImportSpecs",
-				"javax.servlet.jsp.jstl.sql;$jspImportSpecs",
-				"javax.servlet.jsp.jstl.tlv;$jspImportSpecs",
+				"javax.servlet.jsp.jstl.core;$jstlImportSpecs",
+				"javax.servlet.jsp.jstl.fmt;$jstlImportSpecs",
+				"javax.servlet.jsp.jstl.sql;$jstlImportSpecs",
+				"javax.servlet.jsp.jstl.tlv;$jstlImportSpecs",
 				"javax.servlet.jsp.tagext;$jspImportSpecs",
 				"javax.servlet.jsp.resources;$jspImportSpecs",
 				// XML parsing
@@ -208,7 +221,7 @@ eventCreateWarStart = { warName, stagingDir ->
 		attribute(name:"Import-Package", value:"${importedPackages}")
 
 		def importedBundles = importedBundleList.join(',')
-		attribute(name:"Import-Bundle", value:"${importedBundles}")
+		attribute(name:"Require-Bundle", value:"${importedBundles}")
 
 		attribute(name:"Webapp-Context",value:"${grailsAppName}")
 	} 
