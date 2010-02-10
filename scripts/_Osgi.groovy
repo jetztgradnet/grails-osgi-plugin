@@ -70,11 +70,13 @@ springBundles = [
 	"org.springframework:org.springframework.jdbc:$springVersion",
 	"org.springframework:org.springframework.jms:$springVersion",
 	"org.springframework:org.springframework.orm:$springVersion",
-	//"org.springframework:org.springframework.oxm:$springVersion",
+	"org.springframework:org.springframework.oxm:$springVersion",
 	"org.springframework:org.springframework.transaction:$springVersion",
 	"org.springframework:org.springframework.web:$springVersion",
 	"org.springframework:org.springframework.web.servlet:$springVersion",
 	//"org.springframework:org.springframework.web.portlet:$springVersion",
+	
+	"org.springframework:org.springframework.test:$springVersion",
 	
 	// Spring dependencies
 	'org.aopalliance:com.springsource.org.aopalliance:1.0.0',
@@ -85,21 +87,22 @@ springBundles = [
 allBundles << springBundles
 
 webDeps = [
-     'javax.activation:com.springsource.javax.activation:1.1.1',
-     'javax.annotation:com.springsource.javax.annotation:1.0.0',
-     'javax.el:com.springsource.javax.el:1.0.0',
-     'javax.ejb:com.springsource.javax.ejb:3.0.0',
-     'javax.mail:com.springsource.javax.mail:1.4.1',
-     'javax.persistence:com.springsource.javax.persistence:1.99.0',
-     'javax.transaction:com.springsource.javax.transaction:1.1.0',
-     'javax.servlet:com.springsource.javax.servlet:2.5.0',
-     'javax.servlet:com.springsource.javax.servlet.jsp:2.1.0',
-     'javax.xml.bind:com.springsource.javax.xml.bind:2.1.7',
-     'javax.xml.rpc:com.springsource.javax.xml.rpc:1.1.0',
-     'javax.xml.soap:com.springsource.javax.xml.soap:1.3.0',
-     'javax.xml.stream:com.springsource.javax.xml.stream:1.0.1',
-     'javax.xml.ws:com.springsource.javax.xml.ws:2.1.1',
-     'javax.jms:com.springsource.javax.jms:1.1.0',
+	'javax.activation:com.springsource.javax.activation:1.1.1',
+	'javax.annotation:com.springsource.javax.annotation:1.0.0',
+	'javax.el:com.springsource.javax.el:1.0.0',
+	'javax.ejb:com.springsource.javax.ejb:3.0.0',
+	'javax.mail:com.springsource.javax.mail:1.4.1',
+	'javax.persistence:com.springsource.javax.persistence:1.99.0',
+	'javax.transaction:com.springsource.javax.transaction:1.1.0',
+	'javax.servlet:com.springsource.javax.servlet:2.5.0',
+	'javax.servlet:com.springsource.javax.servlet.jsp:2.1.0',
+	'javax.servlet:com.springsource.javax.servlet.jsp.jstl:1.2.0',
+	'javax.xml.bind:com.springsource.javax.xml.bind:2.1.7',
+	'javax.xml.rpc:com.springsource.javax.xml.rpc:1.1.0',
+	'javax.xml.soap:com.springsource.javax.xml.soap:1.3.0',
+	'javax.xml.stream:com.springsource.javax.xml.stream:1.0.1',
+	'javax.xml.ws:com.springsource.javax.xml.ws:2.1.1',
+	'javax.jms:com.springsource.javax.jms:1.1.0',
 ]
 allBundles << webDeps
 
@@ -133,9 +136,9 @@ springDMBundles = [
 	"org.springframework.osgi:spring-osgi-core:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-extender:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-io:$springDMVersion",
-	//'org.springframework.osgi:spring-osgi-mock:$springDMVersion",
-	//'org.springframework.osgi:spring-osgi-test:$springDMVersion",
-	//'org.springframework.osgi:spring-osgi-test-support:$springDMVersion",
+	"org.springframework.osgi:spring-osgi-mock:$springDMVersion",
+	"org.springframework.osgi:spring-osgi-test:$springDMVersion",
+	//"org.springframework.osgi:spring-osgi-test-support:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-web:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-web-extender:$springDMVersion",
 ]
@@ -172,6 +175,8 @@ commonBundles = [
 	'org.hibernate:com.springsource.org.hibernate.ejb:3.4.0.GA',
 	'org.hibernate:com.springsource.org.hibernate.cache:3.3.2.GA',
 	
+	'net.sourceforge.ehcache:com.springsource.net.sf.ehcache:1.6.2',
+	
 	'javax.persistence:com.springsource.javax.persistence:1.99.0',
 	'org.jboss.javassist:com.springsource.javassist:3.9.0.GA',
 	'org.objectweb.asm:com.springsource.org.objectweb.asm:1.5.3',
@@ -183,19 +188,24 @@ commonBundles = [
 
 	//'net.sf.ehcache:ehcache-core:1.7.1',
 	'net.sourceforge.ehcache:com.springsource.net.sf.ehcache:1.6.2',
+
+	'org.xmlpull:com.springsource.org.xmlpull:1.1.4.c',
 ]
 allBundles << commonBundles
 
+grailsVersion = '1.2.1'
+
 grailsBundles = [
-	'org.grails:grails-osgi:1.2.0',	// combines -core and -bootstrap
-	'org.grails:grails-crud:1.2.0',
-	//'org.grails:grails-docs:1.2.0',
-	'org.grails:grails-gorm:1.2.0',
-	'org.grails:grails-resources:1.2.0',
-	'org.grails:grails-spring:1.2.0',
-	'org.grails:grails-web:1.2.0',
+	"org.grails:grails-osgi:$grailsVersion",	// combines -core and -bootstrap
+	"org.grails:grails-crud:$grailsVersion",
+//	"org.grails:grails-docs:$grailsVersion",
+	"org.grails:grails-gorm:$grailsVersion",
+	"org.grails:grails-resources:$grailsVersion",
+	"org.grails:grails-spring:$grailsVersion",
+	"org.grails:grails-web:$grailsVersion",
 
 	'org.codehaus.groovy:groovy-all:1.6.7',
+	'org.codehaus.gant:gant_groovy1.6:1.9.1',
 ]
 allBundles << grailsBundles
 
