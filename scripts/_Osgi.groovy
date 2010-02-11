@@ -635,7 +635,7 @@ class EquinoxRunner {
 		
 		// create log configuration
 		//def dir = new File(osgiRuntimePath)
-		File logConfig = new File(dropinsDir, 'log4j.properties')
+		File logConfig = new File(dropinsDir, 'org.ops4j.pax.logging.properties')
 		if (!logConfig.exists()) {
 			println "preparing log configuration in file ${logConfig}"
 			logConfig.withWriter { writer ->
