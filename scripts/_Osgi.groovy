@@ -43,7 +43,6 @@ systemBundles = [
 	//'org.eclipse/osgi/3.5.0.v20090520',
 	'org.eclipse.osgi:util:3.2.0.v20090520-1800',
 	'org.eclipse.osgi:services:3.2.0.v20090520-1800',
-	//'org.ops4j.pax.confman:pax-confman-propsloader:0.2.2',
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
 ]
@@ -92,7 +91,6 @@ springBundles = [
 allBundles << springBundles
 
 webDeps = [
-	'javax.activation:com.springsource.javax.activation:1.1.1',
 	'javax.annotation:com.springsource.javax.annotation:1.0.0',
 	'javax.el:com.springsource.javax.el:1.0.0',
 	'javax.ejb:com.springsource.javax.ejb:3.0.0',
@@ -102,12 +100,14 @@ webDeps = [
 	'javax.servlet:com.springsource.javax.servlet:2.5.0',
 	'javax.servlet:com.springsource.javax.servlet.jsp:2.1.0',
 	'javax.servlet:com.springsource.javax.servlet.jsp.jstl:1.2.0',
-	'javax.xml.bind:com.springsource.javax.xml.bind:2.1.7',
-	'javax.xml.rpc:com.springsource.javax.xml.rpc:1.1.0',
-	'javax.xml.soap:com.springsource.javax.xml.soap:1.3.0',
-	'javax.xml.stream:com.springsource.javax.xml.stream:1.0.1',
-	'javax.xml.ws:com.springsource.javax.xml.ws:2.1.1',
 	'javax.jms:com.springsource.javax.jms:1.1.0',
+	'javax.xml.rpc:com.springsource.javax.xml.rpc:1.1.0',
+	// contained in Equinox bundle:
+//	'javax.activation:com.springsource.javax.activation:1.1.1',
+//	'javax.xml.bind:com.springsource.javax.xml.bind:2.1.7',
+//	'javax.xml.soap:com.springsource.javax.xml.soap:1.3.0',
+//	'javax.xml.stream:com.springsource.javax.xml.stream:1.0.1',
+//	'javax.xml.ws:com.springsource.javax.xml.ws:2.1.1',
 ]
 allBundles << webDeps
 
@@ -117,6 +117,9 @@ jettyBundles = [
 	// jetty starter and default configuration
 	'org.springframework.osgi:jetty.start.osgi:1.0.0',
 	'org.springframework.osgi:jetty.web.extender.fragment.osgi:1.0.1',
+	// these are necessary to get a standard OSGi HTTP service
+	'org.eclipse.equinox:http.servlet:1.0.200.v20090520-1800',
+	'org.eclipse.equinox:http.jetty:2.0.0.v20090520-1800',
 ]
 allBundles << jettyBundles
 
@@ -195,6 +198,12 @@ commonBundles = [
 	'net.sourceforge.ehcache:com.springsource.net.sf.ehcache:1.6.2',
 
 	'org.xmlpull:com.springsource.org.xmlpull:1.1.4.c',
+	'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1',
+	'org.apache.xalan:com.springsource.org.apache.xalan:2.7.1',
+	'org.apache.xalan:com.springsource.org.apache.xml.serializer:2.7.1',
+	'org.apache.xml:com.springsource.org.apache.xml.resolver:1.2.0',
+	'org.apache.xmlcommons:com.springsource.org.apache.xmlcommons:1.3.4',
+	'org.apache.xml:com.springsource.org.apache.xml.security:1.4.2',
 ]
 allBundles << commonBundles
 
@@ -215,6 +224,7 @@ grailsBundles = [
 allBundles << grailsBundles
 
 auxBundles = [
+	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.webconsole:2.0.2'
 ]
 allBundles << auxBundles
@@ -232,11 +242,18 @@ systemPackages = [
 	'com.sun.org.apache.xpath.internal.jaxp',
 	'com.sun.org.apache.xpath.internal.objects',
 	'com.sun.org.apache.xml.internal',
-	'sun.misc'
+	'sun.misc',
+	// add versions to some packages
+	'javax.activation;version="1.1.1"',
+	'javax.xml.soap;version="1.3.0"',
+	'javax.xml.bind;version="2.0.0"',
+	'javax.xml.stream;version="1.0.1"',
+	'javax.xml.stream.events;version="1.0.1"',
+	'javax.xml.stream.util;version="1.0.1"',
 ]
 
 def osgiDependencies = {
-	log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+	log "info" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
 	repositories {        
 		grailsPlugins()
 		grailsHome()
@@ -255,6 +272,16 @@ def osgiDependencies = {
 		//mavenRepo 'http://repository.springsource.com/maven/bundles/external'
 		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/osgi'
 		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
+
+		def url = 'http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/R-3.5.1-200909170800'
+		def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
+		equinoxResolver.addArtifactPattern("${url}/[organisation].[module]_[revision].[ext]")
+		equinoxResolver.settings = ivySettings
+		equinoxResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
+		equinoxResolver.changingPattern = ".*SNAPSHOT"
+		equinoxResolver.setCheckmodified(true)
+		resolver equinoxResolver 
+		
 		
 		//mavenRepo "http://snapshots.repository.codehaus.org"
 		//mavenRepo "http://repository.codehaus.org"
@@ -379,10 +406,10 @@ Try passing a valid Maven repository with the --repository argument."""
 		//}
 	}
 	
-	def osgiRuntimeDir = new File(new File(warName).parentFile, 'osgi').canonicalPath
+	def osgiRuntimePath = new File(new File(warName).parentFile, 'osgi').canonicalPath
 	if (argsMap?.clean) {
 		try {
-			File dir = new File(osgiRuntimeDir)
+			File dir = new File(osgiRuntimePath)
 			if (dir.exists()) {
 				println "cleaning up osgi runtime directory..."
 				dir.deleteDir()
@@ -396,7 +423,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	try {
 		EquinoxRunner runner = new EquinoxRunner(argsMap: argsMap,
 												buildSettings: grailsSettings,
-												osgiRuntimeDir: osgiRuntimeDir, 
+												osgiRuntimePath: osgiRuntimePath, 
 												systemPackages: systemPackages)
 		BundleContext ctx = runner.start()
 	
@@ -410,6 +437,7 @@ Try passing a valid Maven repository with the --repository argument."""
 			//'org.ops4j.pax.configmanager',
 		    'org.apache.felix.configadmin',
 		    'org.apache.felix.fileinstall',
+		    'org.ops4j.pax.web.pax-web-jetty',
 		])
 	
 		// configure logging
@@ -504,9 +532,10 @@ target(bundle: '''Package the application as OSGi bundle
 class EquinoxRunner {
 	Map argsMap
 	BuildSettings buildSettings
-	String osgiRuntimeDir
+	String osgiRuntimePath
 	BundleContext bundleContext
 	List systemPackages
+	File dropinsDir 
 	
 	/**
 	 * Start OSGi framework.
@@ -519,39 +548,39 @@ class EquinoxRunner {
 		}
 		
 		// create runtime directory
-		def dir = new File(osgiRuntimeDir)
+		def dir = new File(osgiRuntimePath)
 		if (!dir.exists()) {
 			dir.mkdirs()
 		}
 		
-		def confDir = new File(dir, 'dropins')
-		if (!confDir.exists()) {
-			confDir.mkdirs()
+		dropinsDir = new File(dir, 'dropins')
+		if (!dropinsDir.exists()) {
+			dropinsDir.mkdirs()
 		}
 		
-		println "OSGi directory: ${osgiRuntimeDir}"
-		
-		
-		
+		println "OSGi directory: ${osgiRuntimePath}"
+
 		// initialize framework
 		def frameworkProperties = new Properties()
 		frameworkProperties.put("osgi.clean", "true")
 		frameworkProperties.put("osgi.console", "true")
 		frameworkProperties.put("osgi.noShutdown", "true")
-		frameworkProperties.put("osgi.install.area", osgiRuntimeDir as String)
-		frameworkProperties.put("osgi.configuration.area", "$osgiRuntimeDir/configuration" as String)
+		frameworkProperties.put("osgi.install.area", osgiRuntimePath as String)
+		frameworkProperties.put("osgi.configuration.area", "$osgiRuntimePath/configuration" as String)
 		frameworkProperties.put("org.osgi.framework.bootdelegation", "*")
 		frameworkProperties.put("eclipse.ignoreApp", "true")
 		frameworkProperties.put("eclipse.application.noDefault", "true")
 		frameworkProperties.put("org.osgi.framework.system.packages.extra", systemPackages.join(','))
 
-		frameworkProperties.put("osgi.frameworkParentClassloader", "ext")
-		frameworkProperties.put("osgi.contextClassLoaderParent", "ext")
-
+		frameworkProperties.put("osgi.frameworkParentClassloader", "boot")
+		frameworkProperties.put("osgi.contextClassLoaderParent", "boot")
+		
 		//frameworkProperties.put("log4j.configuration", logConfig.absolutePath)
 		EclipseStarter.setInitialProperties(frameworkProperties)
-
-		//System.setProperty("bundles.configuration.location", confDir.canonicalPath)
+		
+		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath) // PAX ConfMan
+		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
+		System.setProperty("felix.fileinstall.debug", "1")
 		
 		// start framework
 		def args = [ "-clean", "-consoleLog", "-console" ]
@@ -605,8 +634,8 @@ class EquinoxRunner {
 		}
 		
 		// create log configuration
-		def dir = new File(osgiRuntimeDir)
-		File logConfig = new File(dir, 'log4j.properties')
+		//def dir = new File(osgiRuntimePath)
+		File logConfig = new File(dropinsDir, 'log4j.properties')
 		if (!logConfig.exists()) {
 			println "preparing log configuration in file ${logConfig}"
 			logConfig.withWriter { writer ->
@@ -617,6 +646,7 @@ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
 log4j.rootLogger=INFO, stdout
 
+log4j.logger.org.ops4j.pax.web=DEBUG
 log4j.logger.org.springframework.osgi.extender.internal.blueprint=WARN
 log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 """
@@ -660,7 +690,6 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
         try {
         	log4jProperties.load(new FileInputStream(logConfig));
 			println "Loaded log4j.properties"
-			println log4jProperties
         }
         catch (IOException e) {
         	println "Failed to load log4j.properties: " + e.message
@@ -713,7 +742,7 @@ log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
 		def bundles = []
 		// install each file
 		bundleFiles.each { file ->
-			println "installing bundle ${file.name}"//" (${file.absolutePath})"
+			//println "installing bundle ${file.name}"//" (${file.absolutePath})"
 			try {
 				def bundle = this.bundleContext.installBundle("file://${file.absolutePath}");
 				bundles << bundle

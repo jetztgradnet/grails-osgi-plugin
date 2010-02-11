@@ -1,15 +1,16 @@
 // TODO move all of this into _Osgi.groovy
 
+def optional="resolution:=optional"
 def osgiImportSpecs = "version=\"[1.5.0, 5.0.0)\""
 def servletImportSpecs = "version=\"[2.4.0, 2.6.0)\""
-def jspImportSpecs = "version=\"[2.1.0, 2.3.0)\";resolution:=optional"
-def jstlImportSpecs = "version=\"[1.1.0, 2.0.0)\";resolution:=optional"
+def jspImportSpecs = "version=\"[2.1.0, 2.3.0)\";$optional"
+def jstlImportSpecs = "version=\"[1.1.0, 2.0.0)\";$optional"
 def springImportSpecs = "version=\"[3.0.0, 4.0.0)\""
-def springDMImportSpecs = "version=\"[2.0.0, 3.0.0)\";resolution:=optional"
+def springDMImportSpecs = "version=\"[2.0.0, 3.0.0)\";$optional"
 
 def libToBundleImport = [
     'activation-1.1.jar':  'package:javax.activation',// 'package:javax.activation;version="1.1.1"',
-    'activation.jar': 'package:javax.activation',
+    'activation.jar': '', //'package:javax.activation',
     'antlr-2.7.6.jar': 'bundle:com.springsource.antlr;version="[2.7.7,2.7.7]"',
     'aopalliance-1.0.jar': 'package:org.aopalliance.aop;version="1.0.0",org.aopalliance.intercept;version="1.0.0"', //bundle:com.springsource.org.aopalliance;version="[3.0.0.RELEASE, 4.0.0)"
 	//'aspectjrt-1.6.6.jar': '',
@@ -100,7 +101,8 @@ def libToBundleImport = [
     'sitemesh-2.4.jar': 'bundle:com.springsource.com.opensymphony.sitemesh;version="[2.4.0, 2.5.0)"',
     'slf4j-api-1.5.8.jar': 'package:org.slf4j;version="[1.5.6, 1.6.0)"',
     'slf4j-log4j12-1.5.8.jar': '',
-    'standard-1.1.2.jar': 'bundle:com.springsource.javax.servlet.jsp.jstl;version="[1.1.0, 2.0.0)"',
+    'standard-1.1.2.jar': '', //'bundle:com.springsource.javax.servlet.jsp.jstl;version="[1.1.0, 2.0.0)"',
+    'jstl-1.1.2.jar': '',
     'stax-api-1.0-2.jar': '',
 	'tomcat-core.jar': '',
 	'tomcat-dbcp.jar': '',
@@ -108,7 +110,7 @@ def libToBundleImport = [
 	'tomcat-juli-adapters.jar': '',
 	'tomcat-juli.jar': '',
     'xalan-2.7.1.jar': '',
-    'xercesImpl-2.9.1.jar': '',
+    'xercesImpl-2.9.1.jar': 'bundle:com.springsource.org.apache.xmlcommons;version="[1.3.4,1.4.0)"', // Xerces is a fragment and attaches to xmlxcommons 'bundle:com.springsource.org.apache.xerces;version="[2.9.1,3.0.0)"',
     'xmlsec-1.4.2.jar': '',
     'xpp3_min-1.1.3.4.O.jar': '',
 ]
@@ -152,12 +154,16 @@ eventCreateWarStart = { warName, stagingDir ->
 				"org.xml.sax.ext",
 				"org.xml.sax.helpers",
 				// OSGi related
-				"org.osgi.framework;$osgiImportSpecs;resolution:=optional",
+				"org.osgi.framework;$osgiImportSpecs;$optional",
 				// Spring OSGi related
 				"org.springframework.context;$springImportSpecs",
 				"org.springframework.web.context;$springImportSpecs",
 				"org.springframework.osgi.context;$springDMImportSpecs",
 				"org.springframework.osgi.web.context.support;$springDMImportSpecs",
+				// logging
+				"org.apache.log4j",
+				"org.apache.log4j.helpers",
+				"org.apache.xml.security.exceptions",
 				]
 		
 		// TODO make configurable
