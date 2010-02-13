@@ -102,6 +102,7 @@ webDeps = [
 	'javax.servlet:com.springsource.javax.servlet.jsp.jstl:1.2.0',
 	'javax.jms:com.springsource.javax.jms:1.1.0',
 	'javax.xml.rpc:com.springsource.javax.xml.rpc:1.1.0',
+	
 	// contained in Equinox bundle:
 //	'javax.activation:com.springsource.javax.activation:1.1.1',
 //	'javax.xml.bind:com.springsource.javax.xml.bind:2.1.7',
@@ -225,7 +226,8 @@ allBundles << grailsBundles
 
 auxBundles = [
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
-	'org.apache.felix:org.apache.felix.webconsole:2.0.2'
+	'org.apache.felix:org.apache.felix.webconsole:2.0.2',
+	'org.apache.felix:org.apache.felix.http.jetty:2.0.4',
 ]
 allBundles << auxBundles
 
@@ -432,12 +434,12 @@ Try passing a valid Maven repository with the --repository argument."""
 	
 		// start bundles required for logging
 		runner.start([
-		    'org.eclipse.osgi.util',
-		    'org.eclipse.osgi.services',
+			'org.eclipse.osgi.util',
+			'org.eclipse.osgi.services',
 			//'org.ops4j.pax.configmanager',
-		    'org.apache.felix.configadmin',
-		    'org.apache.felix.fileinstall',
-		    'org.ops4j.pax.web.pax-web-jetty',
+			'org.apache.felix.configadmin',
+			'org.apache.felix.fileinstall',
+			'org.ops4j.pax.web.pax-web-jetty',
 		])
 	
 		// configure logging
