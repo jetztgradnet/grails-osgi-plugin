@@ -46,7 +46,9 @@ grails.project.dependency.resolution = {
 			'org.ops4j.base:ops4j-base-store:1.2.1',
 			'org.ops4j.pax.swissbox:pax-swissbox-optional-jcl:1.2.0',
 			'org.ops4j.pax.swissbox:pax-swissbox-bnd:1.2.0',
-			'biz.aQute:bndlib:0.0.357'
+			'biz.aQute:bndlib:0.0.357',
+			
+			'org.apache.ivy:ivy:2.1.0'
 		].each { dep ->
 			// build dependencies are put on the classpath for scripts
 			build (dep) {
