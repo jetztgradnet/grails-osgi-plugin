@@ -1,0 +1,7 @@
+
+
+* Dependencies:
+javax.persistence=[1.0.2,2.0.0) ?
+javax.servlet.jsp.*=[2.1.0, 3.0.0) ?
+
+org.apache.xml.security???
