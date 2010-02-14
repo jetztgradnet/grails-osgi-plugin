@@ -3,4 +3,7 @@ docs/api
 docs/gapi
 web-app/WEB-INF/classes
 .DS_Store
+*/.DS_Store
+grails-osgi-*.zip
+plugin.xml
 
