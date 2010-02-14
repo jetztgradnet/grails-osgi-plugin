@@ -293,7 +293,7 @@ def osgiDependencies = {
 	}
 }
 
-target(runBundleEquinox: '''Package and run the application as OSGi bundle
+target(runBundle: '''Package and run the application as OSGi bundle
 	
 	Examples: 
 	grails run-bundle
