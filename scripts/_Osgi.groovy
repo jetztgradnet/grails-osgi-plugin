@@ -392,11 +392,16 @@ Try passing a valid Maven repository with the --repository argument."""
 		runner.start(bundles)
 	
 		// install and start grails app bundle
-		println "installing and starting grails app bundle: $warName"
-		runner.install(new File(warName), true)
+		if (!argsMap?.noApp) {
+			echo "installing and starting grails app bundle: $warName"
+			runner.install(new File(warName), true)
+		}
+		else {
+			echo "skipped installing grails app bundle: $grailsAppName"
+		}
 	}
 	catch (Throwable t) {
-		println "***ERROR***: " + t.message
+		echo "***ERROR***: " + t.message
 		t.printStackTrace()
 	}
 
