@@ -162,8 +162,11 @@ eventCreateWarStart = { warName, stagingDir ->
 				"org.springframework.osgi.web.context.support;$springDMImportSpecs",
 				// logging
 				"org.apache.log4j",
+				"org.apache.log4j.xml",
+				"org.apache.log4j.jdbc;$optional",
 				"org.apache.log4j.helpers",
-				"org.apache.xml.security.exceptions",
+				"org.apache.xml.security;$optional",
+				"org.apache.xml.security.exceptions;$optional",
 				]
 		
 		// TODO make configurable
