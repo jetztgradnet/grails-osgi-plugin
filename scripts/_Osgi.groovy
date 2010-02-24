@@ -250,7 +250,7 @@ systemPackages = [
 ]
 
 def osgiDependencies = {
-	log "info" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+	log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
 	repositories {        
 		grailsPlugins()
 		grailsHome()
