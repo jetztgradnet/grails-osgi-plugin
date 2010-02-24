@@ -609,6 +609,9 @@ log4j.rootLogger=INFO, stdout
 log4j.logger.org.ops4j.pax.web=DEBUG
 log4j.logger.org.springframework.osgi.extender.internal.blueprint=WARN
 log4j.logger.org.springframework.osgi.extender.internal.activator=WARN
+
+# show some spring message
+log4j.logger.org.springframework.core.io.support=DEBUG
 """
 			}
 		}
