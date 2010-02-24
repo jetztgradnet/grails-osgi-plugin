@@ -33,3 +33,7 @@ TODO in configure(ServletContext, boolean): make class implementing RuntimeSprin
    
 * Hibernate
 s. example at http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/
+
+* create Equinox config DSL
+
+* create Manifest in bundle() task
