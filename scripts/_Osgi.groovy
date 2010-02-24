@@ -300,9 +300,13 @@ target(runBundle: '''Package and run the application as OSGi bundle
 	grails run-bundle
 	grails prod run-bundle
 	''') {
-	depends(checkVersion, parseArguments)
-			
-	bundle()
+	depends(checkVersion, parseArguments, configureWarName)
+	
+	System.setProperty('grails.osgi', 'true')
+	
+	if (!argsMap?.noApp) {
+		bundle()
+	}
 	
 	echo "================================================================================================================"
 	echo " Starting OSGi framework"
@@ -453,6 +457,11 @@ target(bundle: '''Package the application as OSGi bundle
 	grails prod bundle
 	''') {
 	depends(checkVersion, parseArguments, configureWarName)
+	
+	System.setProperty('grails.osgi', 'true')
+	
+	// set indicator for event Handler eventCreateWarStart
+	createBundle = true
 
 	// currently we simply call the war target provided by Grails
 	// The appropriate OSGi bundle manifest headers are added via
