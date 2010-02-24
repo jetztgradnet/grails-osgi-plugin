@@ -539,6 +539,8 @@ class EquinoxRunner {
 		System.setProperty("bundles.configuration.location", dropinsDir.canonicalPath) // PAX ConfMan
 		System.setProperty("felix.fileinstall.dir", dropinsDir.canonicalPath)			// Felix FileInstall
 		System.setProperty("felix.fileinstall.debug", "1")
+		// TODO use grails.server.port[.http]
+		System.setProperty("org.osgi.service.http.port", "8081")
 		
 		// start framework
 		def args = [ "-clean", "-consoleLog", "-console" ]
