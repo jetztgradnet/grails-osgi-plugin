@@ -233,5 +233,123 @@ eventCreateWarStart = { warName, stagingDir ->
 		attribute(name:"Require-Bundle", value:"${importedBundles}")
 
 		attribute(name:"Webapp-Context",value:"${grailsAppName}")
-	} 
+	}
+	
+	// here we create spring config files defining namespace handlers
+	println "creating surrogate spring.handlers and spring.schemas"
+	// this works, as the Spring bundles are referenced in header Require-Bundle
+	// TODO remove this hack
+	// the correct way is to lookup the namespace handler provider service from
+	// the OSGi service registry and hand it to BeanBuilder
+	File metaInfoDir = new File(metaInfo)
+	new File(metaInfoDir, "spring.handlers").withWriter { out ->
+		out << """# default spring handlers
+# org.springframework.aop
+http\\://www.springframework.org/schema/aop=org.springframework.aop.config.AopNamespaceHandler
+
+# org.springframework.beans
+http\\://www.springframework.org/schema/p=org.springframework.beans.factory.xml.SimplePropertyNamespaceHandler
+http\\://www.springframework.org/schema/util=org.springframework.beans.factory.xml.UtilNamespaceHandler
+
+# org.springframework.context
+http\\://www.springframework.org/schema/context=org.springframework.context.config.ContextNamespaceHandler
+http\\://www.springframework.org/schema/jee=org.springframework.ejb.config.JeeNamespaceHandler
+http\\://www.springframework.org/schema/lang=org.springframework.scripting.config.LangNamespaceHandler
+http\\://www.springframework.org/schema/task=org.springframework.scheduling.config.TaskNamespaceHandler
+
+# org.springframework.jdbc
+http\\://www.springframework.org/schema/jdbc=org.springframework.jdbc.config.JdbcNamespaceHandler
+		
+# org.springframework.jms
+http\\://www.springframework.org/schema/jms=org.springframework.jms.config.JmsNamespaceHandler
+
+# org.springframework.orm
+caution: filename not matched:  META-INF/spring.handlers
+
+# org.springframework.oxm
+http\\://www.springframework.org/schema/oxm=org.springframework.oxm.config.OxmNamespaceHandler
+		
+# org.springframework.transaction
+http\\://www.springframework.org/schema/tx=org.springframework.transaction.config.TxNamespaceHandler
+
+# org.springframework.web.servlet
+http\\://www.springframework.org/schema/mvc=org.springframework.web.servlet.config.MvcNamespaceHandler
+"""
+	}
+	
+	new File(metaInfoDir, "spring.schemas").withWriter { out ->
+	out << """# default spring schema locations
+# org.springframework.aop
+http\\://www.springframework.org/schema/aop/spring-aop-2.0.xsd=org/springframework/aop/config/spring-aop-2.0.xsd
+http\\://www.springframework.org/schema/aop/spring-aop-2.5.xsd=org/springframework/aop/config/spring-aop-2.5.xsd
+http\\://www.springframework.org/schema/aop/spring-aop-3.0.xsd=org/springframework/aop/config/spring-aop-3.0.xsd
+http\\://www.springframework.org/schema/aop/spring-aop.xsd=org/springframework/aop/config/spring-aop-3.0.xsd
+
+# org.springframework.beans
+http\\://www.springframework.org/schema/beans/spring-beans-2.0.xsd=org/springframework/beans/factory/xml/spring-beans-2.0.xsd
+http\\://www.springframework.org/schema/beans/spring-beans-2.5.xsd=org/springframework/beans/factory/xml/spring-beans-2.5.xsd
+http\\://www.springframework.org/schema/beans/spring-beans-3.0.xsd=org/springframework/beans/factory/xml/spring-beans-3.0.xsd
+http\\://www.springframework.org/schema/beans/spring-beans.xsd=org/springframework/beans/factory/xml/spring-beans-3.0.xsd
+http\\://www.springframework.org/schema/tool/spring-tool-2.0.xsd=org/springframework/beans/factory/xml/spring-tool-2.0.xsd
+http\\://www.springframework.org/schema/tool/spring-tool-2.5.xsd=org/springframework/beans/factory/xml/spring-tool-2.5.xsd
+http\\://www.springframework.org/schema/tool/spring-tool-3.0.xsd=org/springframework/beans/factory/xml/spring-tool-3.0.xsd
+http\\://www.springframework.org/schema/tool/spring-tool.xsd=org/springframework/beans/factory/xml/spring-tool-3.0.xsd
+http\\://www.springframework.org/schema/util/spring-util-2.0.xsd=org/springframework/beans/factory/xml/spring-util-2.0.xsd
+http\\://www.springframework.org/schema/util/spring-util-2.5.xsd=org/springframework/beans/factory/xml/spring-util-2.5.xsd
+http\\://www.springframework.org/schema/util/spring-util-3.0.xsd=org/springframework/beans/factory/xml/spring-util-3.0.xsd
+http\\://www.springframework.org/schema/util/spring-util.xsd=org/springframework/beans/factory/xml/spring-util-3.0.xsd
+
+# org.springframework.context
+http\\://www.springframework.org/schema/context/spring-context-2.5.xsd=org/springframework/context/config/spring-context-2.5.xsd
+http\\://www.springframework.org/schema/context/spring-context-3.0.xsd=org/springframework/context/config/spring-context-3.0.xsd
+http\\://www.springframework.org/schema/context/spring-context.xsd=org/springframework/context/config/spring-context-3.0.xsd
+http\\://www.springframework.org/schema/jee/spring-jee-2.0.xsd=org/springframework/ejb/config/spring-jee-2.0.xsd
+http\\://www.springframework.org/schema/jee/spring-jee-2.5.xsd=org/springframework/ejb/config/spring-jee-2.5.xsd
+http\\://www.springframework.org/schema/jee/spring-jee-3.0.xsd=org/springframework/ejb/config/spring-jee-3.0.xsd
+http\\://www.springframework.org/schema/jee/spring-jee.xsd=org/springframework/ejb/config/spring-jee-3.0.xsd
+http\\://www.springframework.org/schema/lang/spring-lang-2.0.xsd=org/springframework/scripting/config/spring-lang-2.0.xsd
+http\\://www.springframework.org/schema/lang/spring-lang-2.5.xsd=org/springframework/scripting/config/spring-lang-2.5.xsd
+http\\://www.springframework.org/schema/lang/spring-lang-3.0.xsd=org/springframework/scripting/config/spring-lang-3.0.xsd
+http\\://www.springframework.org/schema/lang/spring-lang.xsd=org/springframework/scripting/config/spring-lang-3.0.xsd
+http\\://www.springframework.org/schema/task/spring-task-3.0.xsd=org/springframework/scheduling/config/spring-task-3.0.xsd
+http\\://www.springframework.org/schema/task/spring-task.xsd=org/springframework/scheduling/config/spring-task-3.0.xsd
+
+# org.springframework.jdbc
+http\\://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd=org/springframework/jdbc/config/spring-jdbc-3.0.xsd
+http\\://www.springframework.org/schema/jdbc/spring-jdbc.xsd=org/springframework/jdbc/config/spring-jdbc-3.0.xsd
+	
+# org.springframework.jms
+http\\://www.springframework.org/schema/jms/spring-jms-2.5.xsd=org/springframework/jms/config/spring-jms-2.5.xsd
+http\\://www.springframework.org/schema/jms/spring-jms-3.0.xsd=org/springframework/jms/config/spring-jms-3.0.xsd
+http\\://www.springframework.org/schema/jms/spring-jms.xsd=org/springframework/jms/config/spring-jms-3.0.xsd
+
+# org.springframework.oxm
+http\\://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd=org/springframework/oxm/config/spring-oxm-3.0.xsd
+http\\://www.springframework.org/schema/oxm/spring-oxm.xsd=org/springframework/oxm/config/spring-oxm-3.0.xsd
+	
+# org.springframework.transaction
+http\\://www.springframework.org/schema/tx/spring-tx-2.0.xsd=org/springframework/transaction/config/spring-tx-2.0.xsd
+http\\://www.springframework.org/schema/tx/spring-tx-2.5.xsd=org/springframework/transaction/config/spring-tx-2.5.xsd
+http\\://www.springframework.org/schema/tx/spring-tx-3.0.xsd=org/springframework/transaction/config/spring-tx-3.0.xsd
+http\\://www.springframework.org/schema/tx/spring-tx.xsd=org/springframework/transaction/config/spring-tx-3.0.xsd
+
+# org.springframework.web.servlet
+http\\://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd=org/springframework/web/servlet/config/spring-mvc-3.0.xsd
+http\\://www.springframework.org/schema/mvc/spring-mvc.xsd=org/springframework/web/servlet/config/spring-mvc-3.0.xsd
+"""
+	}
 }
+
+// dummy event handler to get available properties
+/*
+eventPluginLoadEnd = {
+	binding?.variables?.each { name, value ->
+		try {
+			println "############## prop $name: $value (${value?.getClass()?.name})"
+		}
+		catch (Throwable t) {
+			// ignore
+		}
+	}
+}
+*/
