@@ -383,10 +383,11 @@ Try passing a valid Maven repository with the --repository argument."""
 		runner.start([
 			'org.eclipse.osgi.util',
 			'org.eclipse.osgi.services',
-			//'org.ops4j.pax.configmanager',
+			'org.eclipse.equinox.common',
+			
+			// we need these for logging configuration:
 			'org.apache.felix.configadmin',
 			'org.apache.felix.fileinstall',
-			'org.ops4j.pax.web.pax-web-jetty',
 		])
 	
 		// configure logging
