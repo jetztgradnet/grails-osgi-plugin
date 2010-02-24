@@ -5,7 +5,7 @@ def osgiImportSpecs = "version=\"[1.5.0, 5.0.0)\""
 def servletImportSpecs = "version=\"[2.4.0, 2.6.0)\""
 def jspImportSpecs = "version=\"[2.1.0, 2.3.0)\";$optional"
 def jstlImportSpecs = "version=\"[1.1.0, 2.0.0)\";$optional"
-def springImportSpecs = "version=\"[3.0.0, 4.0.0)\""
+def springImportSpecs = "version=\"[3.0.1, 4.0.0)\""
 def springDMImportSpecs = "version=\"[2.0.0, 3.0.0)\";$optional"
 
 def libToBundleImport = [

@@ -53,7 +53,7 @@ loggingBundles = [
 ]
 allBundles << loggingBundles
 
-springVersion = '3.0.0.RELEASE'
+springVersion = '3.0.1.RELEASE-A'
 springBundles = [
 	"org.springframework:org.springframework.aop:$springVersion",
 	"org.springframework:org.springframework.asm:$springVersion",
@@ -74,7 +74,7 @@ springBundles = [
 	"org.springframework:org.springframework.web.servlet:$springVersion",
 	//"org.springframework:org.springframework.web.portlet:$springVersion",
 	
-	"org.springframework:org.springframework.test:$springVersion",
+	//"org.springframework:org.springframework.test:$springVersion",
 	
 	// Spring dependencies
 	'org.aopalliance:com.springsource.org.aopalliance:1.0.0',
