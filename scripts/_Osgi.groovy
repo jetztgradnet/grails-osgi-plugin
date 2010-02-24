@@ -566,8 +566,7 @@ class EquinoxRunner {
 			}
 			consoleEnabled = true
 		}
-		else if ((argsMap?.consoleLog
-					|| argsMap?.console)
+		else if (argsMap?.remoteConsole
 				&& !consolePort) {
 			consolePort = defaultConsolePort
 			consoleEnabled = true
