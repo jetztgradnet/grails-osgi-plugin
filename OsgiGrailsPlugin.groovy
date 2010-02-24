@@ -19,6 +19,11 @@ class OsgiGrailsPlugin {
     def documentation = "http://grails.org/plugin/osgi"
 
     def doWithWebDescriptor = { webXml ->
+    	// use this applicatio context implementation only when creating a bundle
+		if (!isOsgiEnvironment()) {
+			return
+		}
+		
 		def contextParam = webXml.'context-param'
 		def lastContextParam = contextParam[contextParam.size()-1]
 		lastContextParam + {
@@ -50,5 +55,9 @@ class OsgiGrailsPlugin {
     def onConfigChange = { event ->
         // TODO Implement code that is executed when the project configuration changes.
         // The event is the same as for 'onChange'.
+    }
+    
+    boolean isOsgiEnvironment() {
+   		return Boolean.getBoolean('grails.osgi')
     }
 }
