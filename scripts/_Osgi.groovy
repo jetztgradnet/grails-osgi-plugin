@@ -37,6 +37,7 @@ systemBundles = [
 	//'org.eclipse/osgi/3.5.0.v20090520',
 	'org.eclipse.osgi:util:3.2.0.v20090520-1800',
 	'org.eclipse.osgi:services:3.2.0.v20090520-1800',
+	'org.eclipse.equinox:common:3.5.1.R35x_v20090807-1100',
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
 ]
@@ -113,8 +114,9 @@ jettyBundles = [
 	'org.springframework.osgi:jetty.start.osgi:1.0.0',
 	'org.springframework.osgi:jetty.web.extender.fragment.osgi:1.0.1',
 	// these are necessary to get a standard OSGi HTTP service
-	'org.eclipse.equinox:http.servlet:1.0.200.v20090520-1800',
-	'org.eclipse.equinox:http.jetty:2.0.0.v20090520-1800',
+//	'org.eclipse.equinox:http.servlet:1.0.200.v20090520-1800',
+//	'org.eclipse.equinox:http.jetty:2.0.0.v20090520-1800',
+	'org.apache.felix:org.apache.felix.http.jetty:2.0.4',
 ]
 allBundles << jettyBundles
 
@@ -221,7 +223,6 @@ allBundles << grailsBundles
 auxBundles = [
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.webconsole:2.0.2',
-	'org.apache.felix:org.apache.felix.http.jetty:2.0.4',
 ]
 allBundles << auxBundles
 
