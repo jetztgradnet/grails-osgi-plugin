@@ -336,11 +336,11 @@ target(runBundle: '''Package and run the application as OSGi bundle
 
 	def report = manager.resolveDependencies()
 	if(report.hasError()) {
-		println """
+		echo """
 There was an error resolving the OSGi dependencies.
 This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories.
 Try passing a valid Maven repository with the --repository argument."""
-		report.allProblemMessages.each { problem -> println ": $problem" }
+		report.allProblemMessages.each { problem -> echo ": $problem" }
 		exit 1
 	}
 	else {
@@ -355,12 +355,12 @@ Try passing a valid Maven repository with the --repository argument."""
 		try {
 			File dir = new File(osgiRuntimePath)
 			if (dir.exists()) {
-				println "cleaning up osgi runtime directory..."
+				echo "cleaning up osgi runtime directory..."
 				dir.deleteDir()
 			}
 		}
 		catch (Throwable t) {
-			println "failed to cleanup osgi runtime directory: " + t.message
+			echo "failed to cleanup osgi runtime directory: " + t.message
 		}
 	}
 	
