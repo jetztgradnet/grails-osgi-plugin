@@ -2,10 +2,9 @@
 Config.groovy "grails.logging.jul.usebridge" must be false
 
 * Dependencies:
-TODO fixe bundlor templates
+TODO fix bundlor templates
 javax.persistence=[1.0.2,2.0.0) ?
 javax.servlet.jsp.*=[2.1.0, 3.0.0) ?
-
 
 * automatically detect changes in code/resources and rebuild bundle in run-bundle
 TODO
@@ -25,11 +24,17 @@ CHANGES: in doWithSpring, check whether Resource implements ContextResource, and
 TODO set/use nameSpaceHandler service from Spring OSGi Extender, currently managed using spring.handlers and spring.schemas files
 TODO setNamespaceHandlerResolver(): re-create readerContext similar to initializeBeanBuilderForClassLoader()
 
-
 * org.codehaus.groovy.grails.commons.spring.GrailsRuntimeConfigurator
 TODO in configure(ServletContext, boolean): make class implementing RuntimeSpringConfiguration 
    (e.g. WebRuntimeSpringConfiguration) configurable, so it can be replaced with another class,
    which creates a different implementation of WebApplicationContext
+   
+* org.codehaus.groovy.grails.web.context.GrailsConfigUtils.configureWebApplicationContext(ServletContext, WebApplicationContext)
+TODO enable use or creation of derived GrailsRuntimeConfigurator (e.g. from parent app context)
+
+* org.codehaus.groovy.grails.commons.spring.GrailsRuntimeConfigurator.configure(ServletContext, boolean)
+TODO enable use or creation of derived WebRuntimeSpringConfiguration 
+
    
 * Hibernate
 s. example at http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/
