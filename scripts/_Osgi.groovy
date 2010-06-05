@@ -83,7 +83,7 @@ springBundles = [
 	//'net.sourceforge.cglib:com.springsource.net.sf.cglib:2.1.3',
 	'net.sourceforge.cglib:com.springsource.net.sf.cglib:2.2.0',
 ]
-allBundles << springBundles
+//allBundles << springBundles
 
 webDeps = [
 	'javax.annotation:com.springsource.javax.annotation:1.0.0',
@@ -141,13 +141,13 @@ springDMBundles = [
 	"org.springframework.osgi:spring-osgi-core:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-extender:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-io:$springDMVersion",
-	"org.springframework.osgi:spring-osgi-mock:$springDMVersion",
+	//"org.springframework.osgi:spring-osgi-mock:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-test:$springDMVersion",
 	//"org.springframework.osgi:spring-osgi-test-support:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-web:$springDMVersion",
 	"org.springframework.osgi:spring-osgi-web-extender:$springDMVersion",
 ]
-allBundles << springDMBundles
+//allBundles << springDMBundles
 
 commonBundles = [
 	'org.apache.commons:com.springsource.org.apache.commons.beanutils:1.8.0',
@@ -174,14 +174,6 @@ commonBundles = [
 	
 	'com.opensymphony.sitemesh:com.springsource.com.opensymphony.sitemesh:2.4.1',
 	
-	'org.hibernate:com.springsource.org.hibernate.annotations.common:3.3.0.ga',
-	'org.hibernate:com.springsource.org.hibernate.annotations:3.4.0.GA',
-	'org.hibernate:com.springsource.org.hibernate:3.3.2.GA',
-	'org.hibernate:com.springsource.org.hibernate.ejb:3.4.0.GA',
-	'org.hibernate:com.springsource.org.hibernate.cache:3.3.2.GA',
-	
-	'net.sourceforge.ehcache:com.springsource.net.sf.ehcache:1.6.2',
-	
 	'javax.persistence:com.springsource.javax.persistence:1.99.0',
 	'org.jboss.javassist:com.springsource.javassist:3.9.0.GA',
 	'org.objectweb.asm:com.springsource.org.objectweb.asm:1.5.3',
@@ -190,9 +182,15 @@ commonBundles = [
 	'org.jboss.util:com.springsource.org.jboss.util:2.2.13.GA',
 	'org.jboss.logging:com.springsource.org.jboss.logging:2.0.5.GA',
 	'org.jgroups:com.springsource.org.jgroups:2.5.1',
-
+	
 	//'net.sf.ehcache:ehcache-core:1.7.1',
 	'net.sourceforge.ehcache:com.springsource.net.sf.ehcache:1.6.2',
+	
+	'org.hibernate:com.springsource.org.hibernate.annotations.common:3.3.0.ga',
+	'org.hibernate:com.springsource.org.hibernate.annotations:3.4.0.GA',
+	//'org.hibernate:com.springsource.org.hibernate.ejb:3.4.0.GA',
+	//'org.hibernate:com.springsource.org.hibernate.cache:3.3.2.GA',
+	'org.hibernate:com.springsource.org.hibernate:3.3.2.GA',
 
 	'org.xmlpull:com.springsource.org.xmlpull:1.1.4.c',
 	'org.apache.xerces:com.springsource.org.apache.xerces:2.9.1',
@@ -203,6 +201,9 @@ commonBundles = [
 	'org.apache.xml:com.springsource.org.apache.xml.security:1.4.2',
 ]
 allBundles << commonBundles
+
+allBundles << springBundles
+allBundles << springDMBundles
 
 grailsVersion = '1.2.1'
 
@@ -392,7 +393,7 @@ Try passing a valid Maven repository with the --repository argument."""
 	
 		// configure logging
 		runner.configureLogging()
-	
+
 		// start other bundles
 		runner.start(bundles)
 	
@@ -529,7 +530,9 @@ class EquinoxRunner {
 		frameworkProperties.put("osgi.compatibility.bootdelegation", "true")
 		frameworkProperties.put("eclipse.ignoreApp", "true")
 		frameworkProperties.put("eclipse.application.noDefault", "true")
-		frameworkProperties.put("org.osgi.framework.system.packages.extra", systemPackages.join(','))
+		if (systemPackages) {
+			frameworkProperties.put("org.osgi.framework.system.packages.extra", systemPackages.join(','))
+		}
 
 		frameworkProperties.put("osgi.frameworkParentClassloader", "boot")
 		frameworkProperties.put("osgi.contextClassLoaderParent", "boot")
@@ -727,26 +730,30 @@ log4j.logger.org.springframework.core.io.support=DEBUG
 	void start(List bundles) {
 		// start each bundle
 		bundles.each { bundle ->
-			try {
-				if (bundle instanceof Number) {
-					// get bundle by id
-					bundle = this.bundleContext.getBundle(bundle.longValue())
-				}
-				else if (bundle instanceof CharSequence) {
-					def bundleName = bundle.toString()
-					bundle = this.bundleContext.bundles.find { it.symbolicName == bundleName }
-				}
-				if (!bundle) {
-					return
-				}
-				// skip start for fragments
-				if (!isFragment(bundle)) {
-					bundle.start();
-				}
+			start(bundle)	
+		}
+	}
+	
+	void start(def bundle) {
+		try {
+			if (bundle instanceof Number) {
+				// get bundle by id
+				bundle = this.bundleContext.getBundle(bundle.longValue())
 			}
-			catch (e) {
-				println "failed to start bundle ${bundle}: ${e.message}"
-			}	
+			else if (bundle instanceof CharSequence) {
+				def bundleName = bundle.toString()
+				bundle = this.bundleContext.bundles.find { it.symbolicName == bundleName }
+			}
+			if (!bundle) {
+				return
+			}
+			// skip start for fragments
+			if (!isFragment(bundle)) {
+				bundle.start();
+			}
+		}
+		catch (e) {
+			println "failed to start bundle ${bundle}: ${e.message}"
 		}
 	}
 	
