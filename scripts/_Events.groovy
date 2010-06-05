@@ -57,7 +57,8 @@ def libToBundleImport = [
     'hibernate-commons-annotations-3.3.0.ga.jar': 'bundle:com.springsource.org.hibernate.annotations.common;version="[3.3.0,3.4.0)"',
 	'hibernate-commons-annotations-3.1.0.GA.jar': 'bundle:com.springsource.org.hibernate.annotations.common;version="[3.3.0,3.4.0)"',
     'hibernate-core-3.3.1.GA.jar': 'bundle:com.springsource.org.hibernate;version="[3.3.1,3.4.0)"',
-    'hibernate-ehcache-3.3.1.GA.jar': '', // this is a grament to the core hibernate module... 'bundle:com.springsource.org.hibernate.cache;version="[3.3.0,3.5.0)",com.springsource.net.sf.ehcache;version="[1.6.2,1.8.0)"',
+    'hibernate-ehcache-3.3.1.GA.jar': '', // this is a fragment to the core hibernate module... 'bundle:com.springsource.org.hibernate.cache;version="[3.3.0,3.5.0)",com.springsource.net.sf.ehcache;version="[1.6.2,1.8.0)"',
+	
     //'hsqldb-1.8.0.10.jar': '',
     //'htmlparser-1.6.jar': '',
     //'icu4j-3.4.4.jar': '',
@@ -153,6 +154,8 @@ eventCreateWarStart = { warName, stagingDir ->
 				"org.xml.sax",
 				"org.xml.sax.ext",
 				"org.xml.sax.helpers",
+				"org.apache.xml.security;$optional",
+				"org.apache.xml.security.exceptions;$optional",
 				// OSGi related
 				"org.osgi.framework;$osgiImportSpecs;$optional",
 				// Spring OSGi related
@@ -163,10 +166,9 @@ eventCreateWarStart = { warName, stagingDir ->
 				// logging
 				"org.apache.log4j",
 				"org.apache.log4j.xml",
-				"org.apache.log4j.jdbc;$optional",
 				"org.apache.log4j.helpers",
-				"org.apache.xml.security;$optional",
-				"org.apache.xml.security.exceptions;$optional",
+				"org.apache.log4j.jdbc;$optional",
+				"org.apache.log4j.varia;$optional",
 				]
 		
 		// TODO make configurable
