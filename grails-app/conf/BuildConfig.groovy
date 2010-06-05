@@ -32,9 +32,27 @@ grails.project.dependency.resolution = {
 		// contained in Equinox jar
 		//compile 'org.osgi:org.osgi.core:4.2.0'
 		
-		build 'org.eclipse.osgi:org.eclipse.osgi:3.5.1.R35x_v20091005'
-		compile 'org.eclipse.osgi:org.eclipse.osgi:3.5.1.R35x_v20091005'
-		//build 'org.eclipse:osgi:3.5.0.v20090520'
+		def equinoxDrop = 'S-3.6M6-201003121448'
+		def equinoxVersion = '3.5.1.R35x_v20091005'
+		def springDMVersion = '2.0.0.M1' 
+		
+		def url = "http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/$equinoxDrop"
+		def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
+		equinoxResolver.addArtifactPattern("${url}/[organisation].[module]_[revision].[ext]")
+		equinoxResolver.settings = ivySettings
+		equinoxResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
+		equinoxResolver.changingPattern = ".*SNAPSHOT"
+		equinoxResolver.setCheckmodified(true)
+		resolver equinoxResolver 
+		
+		build "org.eclipse.osgi:org.eclipse.osgi:$equinoxVersion"
+		compile "org.eclipse.osgi:org.eclipse.osgi:$equinoxVersion"
+		compile ("org.springframework.osgi:spring-osgi-core:$springDMVersion") {
+			transitive = false
+		}
+		compile ("org.springframework.osgi:spring-osgi-io:$springDMVersion") {
+			transitive = false
+		}
 		
 		//build 'org.ops4j.pax.runner:pax-runner:1.3.0'
 		//provided 'org.ops4j.pax.runner:pax-runner:1.3.0'
