@@ -27,18 +27,19 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-		build 'org.slf4j:jcl104-over-slf4j:1.5.10'
+		build 'org.slf4j:jcl-over-slf4j:1.5.11'
 		
 		// contained in Equinox jar
 		//compile 'org.osgi:org.osgi.core:4.2.0'
 		
-		def equinoxDrop = 'S-3.6M6-201003121448'
-		def equinoxVersion = '3.5.1.R35x_v20091005'
+		def equinoxDrop = 'R-3.6-201006080911' // Helios release // old: 'S-3.6M6-201003121448'
+		def equinoxVersion = '3.6.0.v20100517' // Helios release // old: '3.5.1.R35x_v20091005'
 		def springDMVersion = '2.0.0.M1' 
 		
-		def url = "http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/$equinoxDrop"
+		def url = "http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/equinox/drops/$equinoxDrop" // old: "http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/$equinoxDrop"
+		def pattern = "${url}/[module]_[revision].[ext]" // old: "${url}/[organisation].[module]_[revision].[ext]"
 		def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
-		equinoxResolver.addArtifactPattern("${url}/[organisation].[module]_[revision].[ext]")
+		equinoxResolver.addArtifactPattern(pattern)
 		equinoxResolver.settings = ivySettings
 		equinoxResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
 		equinoxResolver.changingPattern = ".*SNAPSHOT"
