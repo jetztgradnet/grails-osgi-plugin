@@ -23,7 +23,8 @@ import org.apache.log4j.PatternLayout;
 // TODO what are build scopes for?
 //scriptScope = BuildScope.WAR
 
-includeTargets << grailsScript("Init")
+//includeTargets << grailsScript("Init")
+includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsSettings")
 includeTargets << grailsScript("_GrailsPackage")
 includeTargets << grailsScript("_GrailsWar")
@@ -54,7 +55,7 @@ loggingBundles = [
 ]
 allBundles << loggingBundles
 
-springVersion = '3.0.1.RELEASE-A'
+springVersion = '3.0.3.RELEASE'
 springBundles = [
 	"org.springframework:org.springframework.aop:$springVersion",
 	"org.springframework:org.springframework.asm:$springVersion",
@@ -205,7 +206,8 @@ allBundles << commonBundles
 allBundles << springBundles
 allBundles << springDMBundles
 
-grailsVersion = '1.2.1'
+// grailsVersion is supplied in binding from outside
+//grailsVersion = '1.3.1'
 
 grailsBundles = [
 	"org.grails:grails-osgi:$grailsVersion",	// combines -core and -bootstrap
