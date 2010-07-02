@@ -8,6 +8,8 @@ def jstlImportSpecs = "version=\"[1.1.0, 2.0.0)\";$optional"
 def springImportSpecs = "version=\"[3.0.1, 4.0.0)\""
 def springDMImportSpecs = "version=\"[2.0.0, 3.0.0)\";$optional"
 
+def springVersion = '3.0.3.RELEASE'
+
 def libToBundleImport = [
     'activation-1.1.jar':  'package:javax.activation',// 'package:javax.activation;version="1.1.1"',
     'activation.jar': '', //'package:javax.activation',
@@ -52,6 +54,7 @@ def libToBundleImport = [
 //	'grails-web-1.2.1.jar': 'bundle:org.grails.web;version="[1.2.0,2.0.0)"',
 	
     'groovy-all-1.6.7.jar': 'bundle:groovy-all;version="1.6.7"',
+	'groovy-all-1.7.3.jar': 'bundle:groovy-all;version="1.7.3"',
 	
     'hibernate-annotations-3.4.0.GA.jar': '', // this is a fragment to the core hibernate module... 'bundle:com.springsource.org.hibernate.annotations;version="[3.4.0,3.5.0)"',
     'hibernate-commons-annotations-3.3.0.ga.jar': 'bundle:com.springsource.org.hibernate.annotations.common;version="[3.3.0,3.4.0)"',
@@ -78,23 +81,23 @@ def libToBundleImport = [
     //'nekohtml-1.9.12.jar': '',
     //'openxri-client-1.0.1.jar': '',
     //'openxri-syntax-1.0.1.jar': '',
-    'org.springframework.aop-3.0.0.RELEASE.jar': 'bundle:org.springframework.aop;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.asm-3.0.0.RELEASE.jar': 'bundle:org.springframework.asm;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.aspects-3.0.0.RELEASE.jar': 'bundle:org.springframework.aspects;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.beans-3.0.0.RELEASE.jar': 'bundle:org.springframework.beans;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.context-3.0.0.RELEASE.jar': 'bundle:org.springframework.context;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.context.support-3.0.0.RELEASE.jar': 'bundle:org.springframework.context.support;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.core-3.0.0.RELEASE.jar': 'bundle:org.springframework.core;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.expression-3.0.0.RELEASE.jar': 'bundle:org.springframework.expression;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.instrument-3.0.0.RELEASE.jar': 'org.springframework.instrument;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.jdbc-3.0.0.RELEASE.jar': 'bundle:org.springframework.jdbc;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.jms-3.0.0.RELEASE.jar': 'bundle:org.springframework.jms;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.orm-3.0.0.RELEASE.jar': 'bundle:org.springframework.orm;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.oxm-3.0.0.RELEASE.jar': 'bundle:org.springframework.oxm;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.transaction-3.0.0.RELEASE.jar': 'bundle:org.springframework.transaction;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.web-3.0.0.RELEASE.jar': 'bundle:org.springframework.web;version="[3.0.0.RELEASE, 4.0.0)"',
-    'org.springframework.web.servlet-3.0.0.RELEASE.jar': 'bundle:org.springframework.web.servlet;version="[3.0.0.RELEASE, 4.0.0)"',
-	'org.springframework.web.portlet-3.0.0.RELEASE.jar': 'bundle:org.springframework.web.portlet;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.aop-${springVersion}.jar".toString()) : 'bundle:org.springframework.aop;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.asm-${springVersion}.jar".toString()) : 'bundle:org.springframework.asm;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.aspects-${springVersion}.jar".toString()) : 'bundle:org.springframework.aspects;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.beans-${springVersion}.jar".toString()) : 'bundle:org.springframework.beans;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.context-${springVersion}.jar".toString()) : 'bundle:org.springframework.context;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.context.support-${springVersion}.jar".toString()) : 'bundle:org.springframework.context.support;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.core-${springVersion}.jar".toString()) : 'bundle:org.springframework.core;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.expression-${springVersion}.jar".toString()) : 'bundle:org.springframework.expression;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.instrument-${springVersion}.jar".toString()) : 'bundle:org.springframework.instrument;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.jdbc-${springVersion}.jar".toString()) : 'bundle:org.springframework.jdbc;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.jms-${springVersion}.jar".toString()) : 'bundle:org.springframework.jms;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.orm-${springVersion}.jar".toString()) : 'bundle:org.springframework.orm;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.oxm-${springVersion}.jar".toString()) : 'bundle:org.springframework.oxm;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.transaction-${springVersion}.jar".toString()) : 'bundle:org.springframework.transaction;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.web-${springVersion}.jar".toString()) : 'bundle:org.springframework.web;version="[3.0.0.RELEASE, 4.0.0)"',
+    ("org.springframework.web.servlet-${springVersion}.jar".toString()) : 'bundle:org.springframework.web.servlet;version="[3.0.0.RELEASE, 4.0.0)"',
+	("org.springframework.web.portlet-${springVersion}.jar".toString()) : 'bundle:org.springframework.web.portlet;version="[3.0.0.RELEASE, 4.0.0)"',
 	
     'oro-2.0.8.jar': 'bundle:com.springsource.org.apache.oro;version="[2.0.8, 2.1.0)"',
 	//'recaptcha4j-0.0.7.jar': '',
