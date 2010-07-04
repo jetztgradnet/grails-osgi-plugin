@@ -172,6 +172,9 @@ commonBundles = [
 	'org.antlr:com.springsource.antlr:2.7.7',
 	
 	'org.dom4j:com.springsource.org.dom4j:1.6.1',
+
+	'org.aspectj:com.springsource.org.aspectj.runtime:1.6.8.RELEASE',
+	'org.aspectj:com.springsource.org.aspectj.weaver:1.6.8.RELEASE',
 	
 	'com.opensymphony.sitemesh:com.springsource.com.opensymphony.sitemesh:2.4.1',
 	

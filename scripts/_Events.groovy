@@ -15,8 +15,10 @@ def libToBundleImport = [
     'activation.jar': '', //'package:javax.activation',
     'antlr-2.7.6.jar': 'bundle:com.springsource.antlr;version="[2.7.7,2.7.7]"',
     'aopalliance-1.0.jar': 'package:org.aopalliance.aop;version="1.0.0",org.aopalliance.intercept;version="1.0.0"', //bundle:com.springsource.org.aopalliance;version="[3.0.0.RELEASE, 4.0.0)"
-	//'aspectjrt-1.6.6.jar': '',
-    //'aspectjweaver-1.6.6.jar': '',
+    'aspectjrt-1.6.6.jar': 'bundle:com.springsource.org.aspectj.runtime;version="1.6.6.RELEASE"',
+    'aspectjweaver-1.6.6.jar': 'bundle:com.springsource.org.aspectj.runtime;version="1.6.6.RELEASE"',
+	'aspectjrt-1.6.8.jar': 'bundle:com.springsource.org.aspectj.runtime;version="1.6.8.RELEASE"',
+    'aspectjweaver-1.6.8.jar': 'bundle:com.springsource.org.aspectj.runtime;version="1.6.8.RELEASE"',
     'catalina-ant.jar': '',
     'cglib-nodep-2.1_3.jar': 'bundle:com.springsource.net.sf.cglib;version="[2.1.3,2.2.0)"',
     'commons-beanutils-1.8.0.jar': 'bundle:com.springsource.org.apache.commons.beanutils;version="1.8.0"',
