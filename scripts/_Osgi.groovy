@@ -424,6 +424,34 @@ Try passing a valid Maven repository with the --repository argument."""
 	//Thread.sleep(10000)
 }
 
+target(listBundles: '''list all bundles and their origin''') {
+	echo "resolving OSGi dependencies..."
+	def bundleFiles = []
+	def manager = new IvyDependencyManager(grailsAppName, grailsAppVersion, grailsSettings)
+	manager.parseDependencies(osgiDependencies)
+
+	def report = manager.resolveDependencies()
+	if(report.hasError()) {
+		echo """
+There was an error resolving the OSGi dependencies.
+This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories.
+Try passing a valid Maven repository with the --repository argument."""
+		report.allProblemMessages.each { problem -> echo ": $problem" }
+		exit 1
+	}
+	else {
+		echo "Bundles in target system:"
+
+		report.allArtifactsReports.each { rep ->
+			println "${rep.name}: ${rep.artifactOrigin.location}"
+		}
+
+		//bundleFiles.each { file ->
+		//	println file.name
+		//}
+	}
+}
+
 
 target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the application 
 	
