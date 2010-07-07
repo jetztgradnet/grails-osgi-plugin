@@ -1,3 +1,6 @@
+import grails.util.BuildSettingsHolder
+
+
 // TODO move all of this into _Osgi.groovy
 
 def optional="resolution:=optional"
@@ -121,7 +124,30 @@ def libToBundleImport = [
     'xpp3_min-1.1.3.4.O.jar': '',
 ]
 
+def packagingMode = BuildSettingsHolder.getSettings()?.config?.grails?.plugins?.osgi?.packagingMode
+if (!packagingMode) {
+	packagingMode = 'modular'
+}
+
 eventCreateWarStart = { warName, stagingDir -> 
+	def moduleConfig = [:]
+
+	switch (packagingMode) {
+	case 'modular':
+		// replace some libs by importing bundles or packages
+		moduleConfig = libToBundleImport
+		break;
+	case 'monolithic':
+		// we put everything into the bundled war file
+		moduleConfig = [:]
+		break;
+	default:
+		println "unknown packaging mode: $packagingMode"
+		break;
+	}
+
+	println "packaging as $packagingMode bundle"
+
 	String metaInfo = "$stagingDir/META-INF" 
 	ant.mkdir(dir:metaInfo) 
 	String manifestFile = "$metaInfo/MANIFEST.MF" 
@@ -187,7 +213,7 @@ eventCreateWarStart = { warName, stagingDir ->
 			def replacedLibs = []
 			libs.each { lib ->
 				// check whether we have a replacement bundle for a lib 
-				def replacement = libToBundleImport.get(lib)
+				def replacement = moduleConfig.get(lib)
 				if (replacement != null) {
 					if (replacement.size() == 0) {
 						// empty replacement -> skip jar
