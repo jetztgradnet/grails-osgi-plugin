@@ -621,6 +621,7 @@ class EquinoxRunner {
 		this.bundleContext = EclipseStarter.startup( args as String[], null );
 		
 		//configureLogging()
+		configurePersistence()
 		
 		return this.bundleContext
 	}
@@ -726,6 +727,43 @@ log4j.logger.org.springframework.core.io.support=DEBUG
 		println "Log configuration updated!"
 	}
 	
+	void configurePersistence() {
+		if (!this.bundleContext) {
+			return
+		}
+
+
+		// we create a fragment for org.springframework.orm, which forces a package
+		// requirement for 'org.hibernate.cache', which is optional by default
+		File springOrmFragment = new File(dropinsDir, 'org.springframework.orm.hibernate-1.0.0.jar')
+		if (!springOrmFragment.exists()
+			|| (springOrmFragment.lastModified() < springOrmFragment.lastModified())) {
+			println "creating persistence configuration fragment in file ${springOrmFragment}"
+			// create log4j fragment bundle containing logging configuration
+			// see http://lists.ops4j.org/pipermail/general/2009q4/003297.html
+			// for TinyBundles usage notes
+			InputStream bundleStream = TinyBundles.newBundle()
+					.set(org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION, '2')
+					.set(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME, 'org.springframework.orm.hibernate')
+					.set(org.osgi.framework.Constants.BUNDLE_NAME, 'org.springframework.orm.hibernate')
+					.set(org.osgi.framework.Constants.BUNDLE_VERSION, '1.0.0')
+					.set(org.osgi.framework.Constants.BUNDLE_CLASSPATH, '.')
+					.set(org.osgi.framework.Constants.FRAGMENT_HOST, 'org.springframework.orm')
+					.set(org.osgi.framework.Constants.IMPORT_PACKAGE, 'org.hibernate.cache;version="[3.2.0,4.0.0)";resolution:=mandatory')
+					.build(TinyBundles.with()) //withBnd())
+			if (bundleStream) {
+				// save bundle to file
+				springOrmFragment.withOutputStream { out ->
+					out << bundleStream
+				}
+			}
+		}
+		if (springOrmFragment.exists()) {
+			// install persistence configuration fragment
+			this.bundleContext.installBundle("file:${springOrmFragment.canonicalPath}")
+		}
+	}
+
 	/**
 	 * Shutdown OSGi framework.
 	 */
