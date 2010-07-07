@@ -36,9 +36,9 @@ allBundles = []
 
 systemBundles = [ 
 	//'org.eclipse/osgi/3.5.0.v20090520',
-	'org.eclipse.osgi:util:3.2.0.v20090520-1800',
-	'org.eclipse.osgi:services:3.2.0.v20090520-1800',
-	'org.eclipse.equinox:common:3.5.1.R35x_v20090807-1100',
+	'org.eclipse.osgi:util:3.2.100.v20100503',		// 'org.eclipse.osgi:util:3.2.0.v20090520-1800',
+	'org.eclipse.osgi:services:3.2.100.v20100503',	// 'org.eclipse.osgi:services:3.2.0.v20090520-1800',
+	'org.eclipse.equinox:common:3.6.0.v20100503',	// 'org.eclipse.equinox:common:3.5.1.R35x_v20090807-1100',
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
 	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
 ]
@@ -276,7 +276,9 @@ def osgiDependencies = {
 		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/osgi'
 		mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
 
-		def url = 'http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/R-3.5.1-200909170800'
+		def equinoxDrop = 'R-3.6-201006080911' // Helios release
+
+		def url = "http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/equinox/drops/$equinoxDrop" // old: 'http://eclipsemirror.yoxos.com/eclipse.org/equinox/drops/R-3.5.1-200909170800'
 		def equinoxResolver = new org.apache.ivy.plugins.resolver.URLResolver(name: 'Equinox' )
 		equinoxResolver.addArtifactPattern("${url}/[organisation].[module]_[revision].[ext]")
 		equinoxResolver.settings = ivySettings
@@ -284,8 +286,7 @@ def osgiDependencies = {
 		equinoxResolver.changingPattern = ".*SNAPSHOT"
 		equinoxResolver.setCheckmodified(true)
 		resolver equinoxResolver 
-		
-		
+
 		//mavenRepo "http://snapshots.repository.codehaus.org"
 		//mavenRepo "http://repository.codehaus.org"
 		//mavenRepo "http://download.java.net/maven/2/"
