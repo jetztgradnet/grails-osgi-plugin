@@ -166,6 +166,7 @@ eventCreateWarStart = { warName, stagingDir ->
 		// in order to support resource loading
 		def classPathEntries = [ ".", "WEB-INF/classes" ]
 		def importedBundleList = []
+		def exportedPackageList = []
 		def importedPackageList = [
 				// web upport
 				"javax.servlet;$servletImportSpecs",
@@ -225,16 +226,24 @@ eventCreateWarStart = { warName, stagingDir ->
 						replacement = replacement.substring('bundle:'.length())
 						// TODO remove println
 						println "importing bundle $replacement instead of $lib"
-						
+
 						importedBundleList << replacement
 					}
 					else if (replacement.toString().startsWith('package:')) {
 						replacement = replacement.substring('package:'.length())
-						
+
 						// TODO remove println
 						println "importing package $replacement instead of $lib"
-						
+
 						importedPackageList << replacement
+					}
+					else if (replacement.toString().startsWith('export:')) {
+						replacement = replacement.substring('export:'.length())
+
+						// TODO remove println
+						println "exporting package $replacement"
+
+						exportedPackageList << replacement
 					}
 					else {
 						// TODO remove println
@@ -257,13 +266,24 @@ eventCreateWarStart = { warName, stagingDir ->
 		}
 		
 		def classPath = classPathEntries.join(',')
-		attribute(name:"Bundle-ClassPath",value:"${classPath}")
+		if (classPath) {
+			attribute(name:"Bundle-ClassPath",value:"${classPath}")
+		}
 		
 		def importedPackages = importedPackageList.join(',')
-		attribute(name:"Import-Package", value:"${importedPackages}")
+		if (importedPackages) {
+			attribute(name:"Import-Package", value:"${importedPackages}")
+		}
+
+		def exportedPackages = exportedPackageList.join(',')
+		if (exportedPackages) {
+			attribute(name:"Export-Package", value:"${exportedPackages}")
+		}
 
 		def importedBundles = importedBundleList.join(',')
-		attribute(name:"Require-Bundle", value:"${importedBundles}")
+		if (importedBundles) {
+			attribute(name:"Require-Bundle", value:"${importedBundles}")
+		}
 
 		attribute(name:"Webapp-Context",value:"${grailsAppName}")
 	}
