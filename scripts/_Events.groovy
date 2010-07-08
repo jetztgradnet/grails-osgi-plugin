@@ -182,14 +182,11 @@ def tomcatModulesConfig = [
 
 def packagingMode = BuildSettingsHolder.getSettings()?.config?.grails?.plugins?.osgi?.packagingMode
 if (!packagingMode) {
-	packagingMode = 'modular'
+	packagingMode = 'basic'
 }
 
 eventCreateWarStart = { warName, stagingDir -> 
 	def moduleConfig = [:]
-	
-	
-	
 
 	switch (packagingMode) {
 	case 'modular':
