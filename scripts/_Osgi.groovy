@@ -166,7 +166,7 @@ commonBundles = [
 	
 	'org.apache.oro:com.springsource.org.apache.oro:2.0.8',
 	
-	'org.apache.ant:com.springsource.org.apache.ivy:2.0.0',
+	'org.apache.ant:com.springsource.org.apache.ivy:2.1.0',	//2.0.0',
 	'org.apache.ant:com.springsource.org.apache.tools.ant:1.7.1',
 	
 	'org.antlr:com.springsource.antlr:2.7.7',
@@ -221,8 +221,13 @@ grailsBundles = [
 	"org.grails:grails-spring:$grailsVersion",
 	"org.grails:grails-web:$grailsVersion",
 
+	// Groovy 1.6
 	'org.codehaus.groovy:groovy-all:1.6.7',
 	'org.codehaus.gant:gant_groovy1.6:1.9.1',
+
+	// Groovy 1.7
+	'org.codehaus.groovy:groovy-all:1.7.3',
+	'org.codehaus.gant:gant_groovy1.7:1.9.2',
 ]
 allBundles << grailsBundles
 
@@ -621,7 +626,7 @@ class EquinoxRunner {
 		this.bundleContext = EclipseStarter.startup( args as String[], null );
 		
 		//configureLogging()
-		configurePersistence()
+		//configurePersistence()
 		
 		return this.bundleContext
 	}
@@ -726,7 +731,7 @@ log4j.logger.org.springframework.core.io.support=DEBUG
         tracker.close()
 		println "Log configuration updated!"
 	}
-	
+
 	void configurePersistence() {
 		if (!this.bundleContext) {
 			return
