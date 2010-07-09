@@ -40,7 +40,7 @@ systemBundles = [
 	'org.eclipse.osgi:services:3.2.100.v20100503',	// 'org.eclipse.osgi:services:3.2.0.v20090520-1800',
 	'org.eclipse.equinox:common:3.6.0.v20100503',	// 'org.eclipse.equinox:common:3.5.1.R35x_v20090807-1100',
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
-	'org.apache.felix:org.apache.felix.fileinstall:2.0.8',
+	'org.apache.felix:org.apache.felix.fileinstall:3.0.0',
 ]
 allBundles << systemBundles
 
@@ -233,7 +233,9 @@ allBundles << grailsBundles
 
 auxBundles = [
 	'org.apache.felix:org.apache.felix.configadmin:1.2.4',
-	'org.apache.felix:org.apache.felix.webconsole:2.0.2',
+	'org.apache.felix:org.apache.felix.metatype:1.0.4',
+	'org.apache.felix:org.apache.felix.webconsole:3.1.0',
+	'org.apache.felix:org.apache.felix.webconsole.plugins.memoryusage:1.0.0',
 ]
 allBundles << auxBundles
 
