@@ -2,7 +2,7 @@ h1. Grails OSGi plugin
 
 h2. About
 
-The Grails OSGi plugin provides scripts to package a Grails application as an OSGi bundle. Additionally the bundle(s) may be run in an OSGi container assembled ad hoc by the excellent "Pax Runner":http://paxrunner.ops4j.org or deployed to a "SpringSource DM Server":http://www.springsource.org/dmserver
+The Grails OSGi plugin adds support to package and run a Grails application as an OSGi bundle. The bundle(s) may be run in an ad hoc assembled OSGi container or deployed to a external OSGi app server such as "SpringSource DM Server":http://www.springsource.org/dmserver, "Eclipse Virgo":http://eclipse.org/virgo/, or "Apache Karaf":http://karaf.apache.org/.
 
 See also "Grails on OSGi":http://blog.jetztgrad.net/grails-on-osgi/ for details on running Grails applications in an OSGi environment.
 
@@ -26,15 +26,16 @@ h3. Running the bundle
 @grails run-bundle@
 @grails prod run-bundle@
 
-Note: at first start the OSGi runtime is assembled, which may take some time, while Maven is downloading the Internet...
-Note: if the bundle exists, it won't be re-created automatically after changes. So for now use parameter @-forceBundle@ after changing something in the Grails app: @grails run-bundle -forceBundle@
+*Note*: at first start the OSGi runtime is assembled, which may take some time, while Ivy is downloading the Internet...
+
+*Note*: if the bundle exists, it won't be re-created automatically after changes. So for now use parameter @-forceBundle@ after changing something in the Grails app: @grails run-bundle -forceBundle@
 
 h2. How it works
 
-In order to be a valid OSGi bundle, the application is war'ed and provided with the necessary bundle manifest headers (see @scripts/_Event.groovy@ for details).
+In order to be a valid OSGi bundle, the application is war'ed and provided with the necessary bundle manifest headers (see @scripts/_Events.groovy@ for details).
 The bundle can be created using @grails bundle@.  
 
-The OSGi runtime is assembled in the @target/osgi@ directory.
+The OSGi runtime is assembled in the @target/osgi@ directory and uses the "Eclipse Equinox":http://eclipse.org/equinox/ OSGi framework, Spring DM
 
 h2. Roadmap
 
@@ -43,8 +44,10 @@ h2. Roadmap
 * support auto-reloading of changed artifacts
 * export main Grails beans and application context as OSGi service
 * export services as OSGi service (via @static expose = 'osgi'@)
-* implement deployment to DM Server
-* consider other deployment options: Apache Karaf, ...
+* implement deployment to "SpringSource DM Server":http://www.springsource.org/dmserver or its successor "Eclipse Virgo":http://eclipse.org/virgo/
+* implement deployment to "Apache Karaf":http://karaf.apache.org/
+* Spring DM has been donated to Eclipse, so it should be replaced by its successor "Eclipse Gemini":http://eclipse.org/gemini/
+
 
 h2. History
 
