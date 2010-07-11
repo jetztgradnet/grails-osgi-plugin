@@ -27,15 +27,7 @@ h3. Running the bundle
 @grails prod run-bundle@
 
 Note: at first start the OSGi runtime is assembled, which may take some time, while Maven is downloading the Internet...
-
-h3. Creating a zipped OSGi runtime
-
-@grails assemble-osgi-runtime@
-@grails prod assemble-osgi-runtime@
-
-h3. Deploy bundle to DM Server
-
-@grails dmserver deploy@ (Not yet implemented)
+Note: if the bundle exists, it won't be re-created automatically after changes. So for now use parameter @-forceBundle@ after changing something in the Grails app: @grails run-bundle -forceBundle@
 
 h2. How it works
 
@@ -49,11 +41,39 @@ h2. Roadmap
 * make bundle generation configurable (e.g. include/exclude dependencies, ...)
 * make OSGi runtime created by @grails run-bundle@ and @grails assemble-osgi-runtime@ configurable
 * support auto-reloading of changed artifacts
-* use Spring DM instead of Pax Web as Web extender
-* remove dependencies from bundle and package them as their own plugins (re-using existing bundles from the "SpringSource Enterprise Repository":http://www.springsource.com/repository
 * export main Grails beans and application context as OSGi service
 * export services as OSGi service (via @static expose = 'osgi'@)
-* provide access to OSGi @BundleContext@ to artifacts (controllers, services, ...)
 * implement deployment to DM Server
 * consider other deployment options: Apache Karaf, ...
+
+h2. History
+
+h3. 0.2 (2010-07-11)
+
+* using Spring DM instead of Pax Web as Web extender
+* replaced (most) dependencies from bundle by OSGi bundles from the "SpringSource Enterprise Repository":http://www.springsource.com/repository
+* provide access to OSGi @BundleContext@ to artifacts (controllers, services, ...) via Spring injection as bean @bundleContext@:
+Example: controller accessing bundle context
+
+bc. class OsgiTestController {
+    def bundleContext
+    def index = {
+        def bundles = []
+        if (bundleContext) {
+            bundles = bundleContext.bundles
+        }
+        else {
+            flash.message = "bundleContext NOT available"
+        }
+        [ bundles: bundles ]
+    }
+}
+
+
+h3. 0.1 (2010-01-03)
+
+* initial version
+* uses PAX Runner to run osgi-fied Grails app
+* Grails app is war'ed and extended with required OSGi bundle headers to create a single, big, monolithic bundle
+
 
