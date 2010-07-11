@@ -467,20 +467,23 @@ target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the applicatio
 	grails assemble-osgi-runtime
 	grails prod assemble-osgi-runtime
 	''') {
-			
+		
+	echo "not currently implemented"
+	
+	/*		
 	// bundle application
 	bundle()
 	
 	echo "================================================================================================================"
-	echo " Starting OSGi framework"
-	echo " NOTE: The first startup might take some time, while the OSGi framework and some dependencies are downloaded! "
+	echo " NOTE: assembling might take some time, while the OSGi framework and some dependencies are downloaded! "
 	echo "================================================================================================================"
 	
-	// rename "paxrunner-osgi.zip" -> <appname-osgi.zip>
-	// TODO create runtime environmet
-	echo "not currently implemented"
 	
 	def outFile = new File("osgi.zip")
+	
+	// TODO create runtime environmet
+	
+	// rename "paxrunner-osgi.zip" -> <appname-osgi.zip>
 	def targetFile = new File("${grailsAppName}-${metadata.getApplicationVersion()}-osgi.zip")
 	if (!outFile.renameTo(targetFile)) {
 		targetFile = outFile
@@ -491,6 +494,7 @@ target(assembleOsgiRuntime: '''assemble a zipped OSGi runtime for the applicatio
 	else {
 		echo "Failed to assemble an OSGi environment! See log output for details"
 	}
+	*/
 }
 
 target(bundle: '''Package the application as OSGi bundle
