@@ -12,7 +12,7 @@ The OSGi plugin is released under the "Apache License 2.0":http://apache.org/lic
 
 h2. Installation
 
-Simply call @grails install-plugin osgi@ to install the OSGi plugin
+Simply call @grails install-plugin osgi@ to install the OSGi plugin.
 
 h2. Usage
 
@@ -38,7 +38,7 @@ The "bundle context":http://www.osgi.org/javadoc/r4v42/org/osgi/framework/Bundle
 
 The bundle context is available from Grails' parent ApplicationContext as bean @bundleContext@. It can be injected into all Spring-managed beans, i.e. all Grails artifacts, like Controllers, Services, etc.
 
-In order to get a reference to the BundleContext, a artifact needs to define a reference with the name @bundleContext@.
+In order to get a reference to the BundleContext, an artifact needs to define a reference with the name @bundleContext@.
 
 Example: controller accessing bundle context
 
@@ -55,6 +55,12 @@ bc. class OsgiTestController {
         [ bundles: bundles ]
     }
 }
+
+h2. Deployment
+
+Automatic deployment is not yet implemented. In order to deploy the OSGi-fied Grails application, the generated bundle (i.e. the war file @target/myapp-version.war@) and all required bundles need to installed in your OSGi application server. A list of required bundles with download URLs can be generated with @grails list-bundles@. OSGi application servers, such as SpringSource dmServer, Apache Karaf, or Eclipse Virgo, usually offer a pickup directory, which can be used to hot deploy bundles. Simply drop the war file and all dependencies (if not installed otherwise) into this directory and you are good to go.
+
+Later versions of the OSGi plugin will automate this process.
 
 
 h2. Roadmap
@@ -106,7 +112,7 @@ h2. Getting around the OSGi runtime
 
 h3. Web Console
 
-The "Felix Web Management Console":http://felix.apache.org/site/apache-felix-web-console.html provides excellent insight into the inner workings. It can be accessed at "http://localhost:8080/system/console/":http://localhost:8081/system/console/ with user "admin" and password "admin" (*Note*: the web console runs on a different port!).
+The "Felix Web Management Console":http://felix.apache.org/site/apache-felix-web-console.html provides excellent insight into the inner workings. It can be accessed at "http://localhost:8081/system/console/":http://localhost:8081/system/console/ with user "admin" and password "admin" (*Note*: the web console runs on a different port!).
 
 h3. Shell Console
 

@@ -49,7 +49,7 @@ The "bundle context":http://www.osgi.org/javadoc/r4v42/org/osgi/framework/Bundle
 
 The bundle context is available from Grails' parent ApplicationContext as bean @bundleContext@ . It can be injected into all Spring-managed beans, i.e. all Grails artifacts, like Controllers, Services, etc.
 
-In order to get a reference to the BundleContext, a artifact needs to define a reference with the name @bundleContext@ .
+In order to get a reference to the BundleContext, an artifact needs to define a reference with the name @bundleContext@ .
 
 Example: controller accessing bundle context
 
@@ -69,6 +69,11 @@ class OsgiTestController {
 }
 {code}
 
+h2. Deployment
+
+Automatic deployment is not yet implemented. In order to deploy the OSGi-fied Grails application, the generated bundle (i.e. the war file @target/myapp-version.war@ ) and all required bundles need to installed in your OSGi application server. A list of required bundles with download URLs can be generated with @grails list-bundles@ . OSGi application servers, such as SpringSource dmServer, Apache Karaf, or Eclipse Virgo, usually offer a pickup directory, which can be used to hot deploy bundles. Simply drop the war file and all dependencies (if not installed otherwise) into this directory and you are good to go.
+
+Later versions of the OSGi plugin will automate this process.
 
 h2. Roadmap
 
