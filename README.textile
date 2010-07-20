@@ -14,6 +14,10 @@ h2. Installation
 
 Simply call @grails install-plugin osgi@ to install the OSGi plugin.
 
+In @Config.groovy@, the @java.util.logging@ Bridge must be disabled:
+
+bc. grails.logging.jul.usebridge = false
+
 h2. Usage
 
 h3. Creating an OSGi bundle from the Grails application
