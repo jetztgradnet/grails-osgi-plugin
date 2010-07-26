@@ -19,6 +19,7 @@ grails.project.dependency.resolution = {
         //mavenLocal()
         mavenCentral()
 		ebr()
+		mavenRepo "http://maven.springframework.org/milestone"
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"

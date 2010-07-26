@@ -273,6 +273,7 @@ def osgiDependencies = {
 		mavenLocal()
 		ebr()
 		mavenCentral()
+		mavenRepo "http://maven.springframework.org/milestone"
 		
 		//mavenRepo 'http://repository.ops4j.org/mvn-snapshots/'
 		//mavenRepo 'http://repository.ops4j.org/mvn-releases/'
